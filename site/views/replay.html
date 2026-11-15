@@ -1,0 +1,47 @@
+<section class="view" id="view-replay">
+  <header>
+    <h2><span class="en">The last test run, replayed</span><span class="ru">Последний прогон тестов, шаг за шагом</span></h2>
+    <p class="lead">
+      <span class="en"
+        >Every check is one sentence. Open a check to see the steps it took and the real bytes it exchanged with the
+        inverter during the run.</span
+      >
+      <span class="ru"
+        >Каждая проверка — одно предложение. Откройте проверку, чтобы увидеть её шаги и настоящие байты, которыми она
+        обменялась с инвертором во время прогона.</span
+      >
+    </p>
+  </header>
+
+  <section>
+    <h3><span class="en">The same checks, three ways to connect</span><span class="ru">Одни и те же проверки, три способа подключения</span></h3>
+    <div class="linkcards" id="replay-links"></div>
+    <p class="small muted">
+      <span class="en"
+        >A check is skipped on a link where it makes no sense: a checksum test has nothing to do on a network, which
+        has no checksum, and the bench tests need a real cable.</span
+      >
+      <span class="ru"
+        >Проверка пропускается там, где она не имеет смысла: тесту контрольной суммы нечего делать в сети, где её нет, а
+        стендовым тестам нужен настоящий кабель.</span
+      >
+    </p>
+  </section>
+
+  <section>
+    <div class="row" style="justify-content: space-between">
+      <h3><span class="en">All checks by topic</span><span class="ru">Все проверки по темам</span></h3>
+      <input class="search" id="replay-search" type="search" autocomplete="off" aria-label="Search checks" />
+    </div>
+    <div class="legend">
+      <span><i class="p">mem</i><span class="en">in memory</span><span class="ru">в памяти</span></span>
+      <span><i class="p">ser</i><span class="en">virtual serial port</span><span class="ru">виртуальный последовательный порт</span></span>
+      <span><i class="p">tcp</i><span class="en">network</span><span class="ru">сеть</span></span>
+      <span><i>ser</i><span class="en">grey: skipped on this link</span><span class="ru">серый: на этой линии пропущена</span></span>
+    </div>
+    <div id="replay-suites"></div>
+    <p class="muted" id="replay-none" hidden>
+      <span class="en">No check matches the search.</span><span class="ru">По запросу ничего не найдено.</span>
+    </p>
+  </section>
+</section>

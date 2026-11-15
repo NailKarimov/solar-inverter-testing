@@ -1,0 +1,553 @@
+{
+ "suites": {
+  "test_inverter_day": [
+   "A day in the life of the inverter",
+   "Один день из жизни инвертора",
+   "Sunrise to sunset: power, energy, temperature, start-up",
+   "От рассвета до заката: мощность, энергия, температура, запуск"
+  ],
+  "test_grid_safety": [
+   "Safety: grid outage and overheating",
+   "Безопасность: пропала сеть, перегрев",
+   "The inverter must stop when it is dangerous to go on",
+   "Инвертор обязан остановиться, когда продолжать опасно"
+  ],
+  "test_power_limit": [
+   "Remote commands: power limit, disconnect",
+   "Команды издалека: ограничить мощность, отключиться",
+   "The grid operator's commands are obeyed, and dropped when nobody renews them",
+   "Команды оператора сети выполняются и снимаются, если их никто не продлевает"
+  ],
+  "test_register_access": [
+   "What may be written and what may not",
+   "Что можно записывать, а что нельзя",
+   "Wrong commands are refused as a whole and change nothing",
+   "Неверные команды отклоняются целиком и ничего не меняют"
+  ],
+  "test_crc": [
+   "Checksum",
+   "Контрольная сумма",
+   "Any damage on the wire is noticed",
+   "Любое повреждение в проводе замечается"
+  ],
+  "test_frames": [
+   "Message format",
+   "Формат сообщений",
+   "Messages are built byte for byte as the specification says",
+   "Сообщения собраны байт в байт по спецификации"
+  ],
+  "test_protocol_rtu": [
+   "Conversation over a serial cable",
+   "Разговор по последовательному кабелю",
+   "Modbus RTU: answers, refusals and silence where silence is due",
+   "Modbus RTU: ответы, отказы и молчание там, где положено молчать"
+  ],
+  "test_protocol_tcp": [
+   "Conversation over the network",
+   "Разговор по сети",
+   "Modbus TCP: several clients, slow and broken connections",
+   "Modbus TCP: несколько клиентов, медленные и оборванные соединения"
+  ],
+  "test_sunspec_codec": [
+   "How numbers and text are stored",
+   "Как хранятся числа и текст",
+   "Registers hold numbers, negative numbers, text and \"no value\"",
+   "В регистрах лежат числа, отрицательные числа, текст и «нет значения»"
+  ],
+  "test_sunspec_map": [
+   "The SunSpec map",
+   "Карта SunSpec",
+   "The register map equals the official standard, value by value",
+   "Карта регистров совпадает с официальным стандартом, значение за значением"
+  ],
+  "test_interop_pymodbus": [
+   "A standard Modbus library talks to it",
+   "С ним говорит стандартная библиотека Modbus",
+   "pymodbus, written by other people, gets the same answers",
+   "pymodbus, написанный другими людьми, получает те же ответы"
+  ],
+  "test_interop_sunspec": [
+   "The official SunSpec client talks to it",
+   "С ним говорит официальный клиент SunSpec",
+   "The SunSpec Alliance's own client finds and reads the inverter",
+   "Клиент самого альянса SunSpec находит инвертор и читает его"
+  ],
+  "test_client_noise": [
+   "The asking side on a noisy line",
+   "Спрашивающая сторона на линии с помехами",
+   "The client never turns a damaged answer into data",
+   "Клиент никогда не принимает повреждённый ответ за данные"
+  ],
+  "test_robustness": [
+   "Garbage and random input",
+   "Мусор и случайные данные",
+   "Thousands of random requests never stop the inverter",
+   "Тысячи случайных запросов не останавливают инвертор"
+  ],
+  "test_bench": [
+   "On the real cable (bench)",
+   "По настоящему кабелю (стенд)",
+   "Runs at home on two USB-RS485 adapters; skipped in the cloud",
+   "Идёт дома на двух адаптерах USB-RS485; в облаке пропускается"
+  ],
+  "test_pages": [
+   "The visual page in a browser",
+   "Наглядная страница в браузере",
+   "The five views open, switch language and react to planted bugs",
+   "Пять разделов открываются, переключают язык и реагируют на посаженные баги"
+  ]
+ },
+ "tests": {
+  "test_one_thousand_polls_without_a_lost_frame": "Тысяча чтений по настоящему кабелю доходит полностью, и инвертор не насчитал ни одного повреждённого кадра.",
+  "test_round_trip_time_fits_the_baud_rate": "Обычный обмен занимает не дольше, чем байты идут по проводу, плюс задержка USB-адаптеров.",
+  "test_largest_block_crosses_the_cable": "Самый длинный ответ, который разрешает протокол, 255 байт, проходит по настоящему кабелю без повреждений.",
+  "test_client_never_hands_out_a_damaged_value": "Когда на линии портится один бит из 400, 300 чтений дают либо верные значения, либо ошибку, но никогда неверное значение.",
+  "test_retries_get_the_true_value_through_a_bad_line": "С повторами запросов 200 чтений по шумной линии заканчиваются верными значениями.",
+  "test_good_answer_is_accepted": "Неповреждённый ответ от нужного устройства принимается.",
+  "test_answer_with_a_wrong_checksum_is_rejected": "Ответ, у которого не сходится контрольная сумма, отбрасывается.",
+  "test_answer_from_another_device_is_rejected": "Совершенно правильный ответ, но с чужого адреса, отбрасывается.",
+  "test_cut_off_answer_is_rejected": "Ответ, оборванный на середине, отбрасывается, когда время ожидания вышло.",
+  "test_answer_to_another_question_is_rejected": "Правильный кадр, но с ответом на другую функцию, отбрасывается.",
+  "test_answer_with_the_wrong_number_of_registers_is_rejected": "Ответ с одним регистром вместо двух запрошенных отбрасывается.",
+  "test_write_confirmed_with_another_value_is_rejected": "Запись, в подтверждении которой стоит другое значение, считается неудачной.",
+  "test_refusal_is_not_asked_again": "Отказ устройства окончателен: клиент сообщает о нём и не повторяет запрос.",
+  "test_damaged_answer_is_asked_again": "После повреждённого ответа клиент повторяет запрос и берёт хороший ответ.",
+  "test_silent_device_makes_the_client_give_up_on_time": "Если устройство молчит, клиент пробует три раза по 0,2 с и сообщает, что ответа нет.",
+  "test_tcp_answer_to_an_older_request_is_rejected": "По сети ответ с номером другого запроса отбрасывается.",
+  "test_tcp_answer_that_is_not_modbus_is_rejected": "По сети ответ, в заголовке которого не «Modbus», отбрасывается.",
+  "test_textbook_request_has_the_textbook_checksum": "Запрос 01 03 00 00 00 02 из учебников по Modbus получает контрольную сумму C4 0B.",
+  "test_known_checksums": "Опубликованные примеры дают опубликованные контрольные суммы.",
+  "test_checksum_goes_low_byte_first": "В проводе младший байт контрольной суммы идёт раньше старшего.",
+  "test_a_frame_with_its_checksum_is_accepted": "Любое сообщение со своей контрольной суммой принимается как неповреждённое.",
+  "test_any_single_flipped_bit_is_detected": "Переверните любой один бит любого сообщения, и контрольная сумма перестаёт сходиться.",
+  "test_any_burst_of_up_to_16_damaged_bits_is_detected": "Всплеск помехи длиной до 16 бит в любом месте сообщения всегда обнаруживается.",
+  "test_fragments_shorter_than_a_frame_are_rejected": "Меньше четырёх байт не могут быть правильным сообщением.",
+  "test_read_request_matches_the_specification_example": "Чтение 3 регистров с адреса 107 — это пять байт 03 00 6B 00 03, как в спецификации.",
+  "test_write_single_request_matches_the_specification_example": "Запись значения 3 в регистр 1 — это 06 00 01 00 03, как в спецификации.",
+  "test_write_multiple_request_matches_the_specification_example": "Запись 0x000A и 0x0102 с регистра 1 — это 10 00 01 00 02 04 00 0A 01 02, как в спецификации.",
+  "test_rtu_frame_is_address_then_message_then_checksum": "Кадр в последовательной линии — это адрес устройства, сообщение и контрольная сумма, именно в таком порядке.",
+  "test_rtu_round_trip": "Всё, что упаковано в кадр, достаётся из него без изменений.",
+  "test_rtu_rejects_fragments": "Кадр короче четырёх байт отвергается.",
+  "test_rtu_rejects_a_wrong_checksum": "Кадр с несходящейся контрольной суммой отвергается.",
+  "test_request_length_is_known_from_the_first_bytes": "По первым байтам запроса устройство знает, какой он будет длины.",
+  "test_response_length_is_known_from_the_first_bytes": "По первым байтам ответа клиент знает, какой он будет длины.",
+  "test_tcp_header_layout": "Сетевой кадр начинается с 7 байт: номер запроса, протокол 0, длина, номер устройства; контрольной суммы нет.",
+  "test_tcp_header_round_trip": "Длина в заголовке всегда считает байт номера устройства плюс сообщение.",
+  "test_read_answer_round_trip": "Регистры из ответа на чтение возвращаются в том порядке, в каком были отправлены.",
+  "test_exception_answer_raises_with_its_code": "Ответ 83 02 на чтение сообщается как исключение 02 (нет такого адреса).",
+  "test_answers_that_do_not_fit_the_request_are_refused": "Ответ с другой функцией, неверным счётчиком байт или неверным размером отвергается.",
+  "test_write_answer_must_echo_the_request": "Запись подтверждена, только если ответ повторяет адрес и значение.",
+  "test_grid_loss_stops_the_feed_in_within_a_second": "Когда сеть пропадает, инвертор за секунду перестаёт отдавать энергию, чтобы никто не чинил линию под напряжением.",
+  "test_grid_loss_is_reported_as_a_fault": "Во время отключения сети инвертор сообщает FAULT с событием GRID_DISCONNECT, ноль вольт и ноль герц.",
+  "test_inverter_waits_a_minute_after_the_grid_returns": "После возвращения сети инвертор ждёт полные 60 секунд и только потом снова отдаёт энергию.",
+  "test_even_a_one_second_dip_costs_the_full_minute": "Провал сети длиной в одну секунду считается обычным отключением: следует полная минута ожидания.",
+  "test_fault_flag_clears_when_the_grid_is_back": "Событие GRID_DISCONNECT исчезает, как только сеть вернулась, хотя инвертор ещё ждёт.",
+  "test_grid_loss_at_night_is_still_reported": "Отключение сети ночью тоже сообщается как авария, а потом инвертор снова засыпает.",
+  "test_overheating_stops_the_inverter": "Когда радиатор нагревается до 95 градусов, инвертор останавливается и сообщает OVER_TEMP.",
+  "test_trip_threshold_is_exactly_95_degrees": "При 94,9 градуса инвертор работает, при 95,0 останавливается.",
+  "test_restart_threshold_is_exactly_75_degrees": "После перегрева инвертор стоит при 75,1 градуса и запускается при 75,0.",
+  "test_hot_cabinet_makes_the_inverter_cycle_but_never_cook": "В шкафу с 60 градусами инвертор отключается, остывает, запускается и снова отключается, но никогда не работает выше 95 градусов.",
+  "test_two_faults_at_once_show_both_events": "Когда сети нет и радиатор перегрет, оба события сообщаются одновременно.",
+  "test_energy_counter_stands_still_during_a_fault": "Пока авария держит инвертор выключенным, счётчик энергии стоит.",
+  "test_pymodbus_reads_the_marker": "Стандартная библиотека Modbus читает метку SunS, ничего не зная о коде этого проекта.",
+  "test_pymodbus_decodes_text_numbers_and_counters": "Собственные декодеры библиотеки читают название производителя, мощность и 32-битный счётчик энергии.",
+  "test_pymodbus_reads_the_largest_block": "Библиотека читает 125 регистров, самый большой блок по протоколу, одним запросом.",
+  "test_pymodbus_input_registers_match_holding_registers": "Через библиотеку функция 04 возвращает те же данные, что и функция 03.",
+  "test_pymodbus_sets_a_power_limit": "Ограничение мощности, записанное библиотекой функцией 16, действует: 2500 Вт в полдень.",
+  "test_pymodbus_sees_the_refusal_code": "Библиотека сообщает об отказе в чтении как об исключении с тем кодом, который прислал инвертор.",
+  "test_pymodbus_sees_a_refused_value": "Библиотека сообщает ограничение 101 % как исключение 03, и ограничение остаётся 100 %.",
+  "test_pymodbus_gets_no_answer_from_another_unit": "На запрос к чужому номеру устройства библиотека ждёт и сообщает, что ответа нет.",
+  "test_official_client_finds_all_models_by_itself": "Официальный клиент SunSpec, зная только адрес, сам находит все четыре модели инвертора.",
+  "test_official_client_reads_the_identity": "Официальный клиент показывает производителя, модель и серийный номер устройства.",
+  "test_official_client_reads_full_power_at_noon": "Официальный клиент сам применяет масштабные множители и читает в полдень 5000 Вт, 234,0 В и 21,37 А.",
+  "test_official_client_and_own_client_read_the_same_values": "Значение за значением официальный клиент и клиент этого проекта получают одни и те же числа.",
+  "test_official_client_finds_every_mandatory_value": "В официальном клиенте ни одно обязательное значение ни одной модели не приходит пустым.",
+  "test_official_client_shows_absent_values_as_empty": "Значения, которых у однофазного инвертора нет, например ток фазы B, приходят пустыми, а не нулём.",
+  "test_official_client_sets_a_power_limit": "Ограничение 50 %, заданное через объекты модели официального клиента, действует: 2500 Вт, THROTTLED.",
+  "test_official_client_reports_a_refusal": "Чтение несуществующего регистра доходит до официального клиента как исключение Modbus 2.",
+  "test_at_night_the_inverter_sleeps": "В три часа ночи инвертор спит: нет мощности, нет тока, нет напряжения панелей.",
+  "test_at_noon_it_delivers_its_rated_power": "В полдень при ясном небе инвертор отдаёт ровно свои паспортные 5000 Вт.",
+  "test_power_never_exceeds_the_nameplate": "При замерах каждые полчаса целые сутки мощность ни разу не поднимается выше паспортной.",
+  "test_power_follows_the_datasheet_curve": "В любой час ясного дня мощность равна тому, что даёт формула из паспорта, с точностью до ватта.",
+  "test_power_rises_all_morning_and_falls_all_evening": "Час за часом мощность только растёт до плато и только падает после него.",
+  "test_day_is_symmetric_around_solar_noon": "Одинаковое время до и после солнечного полудня (13:22:30) даёт одинаковую мощность.",
+  "test_clouds_reduce_the_power": "Больше облаков — меньше мощности, а полностью пасмурный полдень всё равно даёт столько, сколько может четверть света.",
+  "test_power_falls_at_once_and_rises_gently": "Когда приходит облако, мощность падает за секунду; когда уходит, возвращается по 1 кВт в секунду.",
+  "test_start_up_takes_twenty_seconds_of_grid_checks": "На рассвете инвертор сначала 20 секунд проверяет сеть с нулём на выходе и только потом начинает отдавать энергию.",
+  "test_soft_start_adds_one_kilowatt_per_second": "После запуска мощность растёт на 1 кВт каждую секунду, пока не достигнет того, что даёт солнце.",
+  "test_ac_power_is_always_below_dc_power": "Весь день инвертор отдаёт меньше, чем получает: не меньше 20 Вт и 2,5 % уходит в тепло.",
+  "test_ac_power_equals_voltage_times_current": "На стороне переменного тока мощность равна напряжению, умноженному на ток, с точностью до округления регистров.",
+  "test_dc_power_equals_voltage_times_current": "На стороне постоянного тока мощность равна напряжению, умноженному на ток, с точностью до округления регистров.",
+  "test_apparent_power_equals_active_power": "При коэффициенте мощности 100 % полная мощность равна активной, а реактивная равна нулю.",
+  "test_energy_counter_adds_up_the_power": "Один час при ровных 5000 Вт прибавляет к счётчику энергии ровно 5000 Вт·ч.",
+  "test_energy_counter_never_goes_down": "За целые сутки счётчик энергии только растёт, и ясный июньский день даёт около 45 кВт·ч.",
+  "test_energy_counter_stands_still_at_night": "Между закатом и рассветом счётчик энергии стоит.",
+  "test_evening_shutdown_happens_once": "В сумерках инвертор засыпает один раз и остаётся спящим, а не мигает туда-сюда.",
+  "test_weak_light_keeps_a_running_inverter_on_and_a_sleeping_one_asleep": "В слабом свете 21:21 работавший инвертор продолжает работать, а спавший остаётся спящим.",
+  "test_next_morning_it_starts_again": "После ночи сна инвертор на следующее утро просыпается сам.",
+  "test_clock_wraps_at_midnight": "Через две минуты после 23:59 часы показывают 00:01.",
+  "test_simulated_time_moves_only_on_command": "Модельные часы стоят, пока тест их не сдвинет, поэтому каждый прогон видит один и тот же день.",
+  "test_heat_sink_warms_with_load_and_cools_at_night": "После часа на полной мощности радиатор на 45 градусов теплее воздуха; ночью он остывает обратно.",
+  "test_ambient_temperature_shifts_the_heat_sink": "Морозной ночью неработающий инвертор принимает температуру воздуха, в том числе ниже нуля.",
+  "test_grid_voltage_rises_slightly_while_feeding_in": "Инвертор показывает 230,0 В ночью и 234,0 В, когда отдаёт полную мощность.",
+  "test_grid_frequency_reads_fifty_hertz": "Частота сети читается как 50,00 Гц, с двумя знаками после запятой.",
+  "test_array_voltage_tells_what_the_inverter_is_doing": "Панели показывают 0 В в темноте, 440 В без нагрузки на рассвете, 360 В при полном использовании и больше, когда мощность срезана.",
+  "test_same_commands_give_the_same_registers": "Два прогона одного сценария оставляют все регистры карты одинаковыми: ничего случайного нет.",
+  "test_limit_of_50_percent_halves_the_output": "Получив команду ограничиться до 50 %, инвертор отдаёт 2500 Вт и сообщает, что он ограничен.",
+  "test_limit_sets_the_output_to_that_share_of_the_rating": "Любое ограничение от 0 до 100 % даёт ровно эту долю от паспортных 5000 Вт.",
+  "test_limit_above_what_the_sun_delivers_changes_nothing": "Под плотными облаками ограничение 50 % выше того, что даёт солнце, поэтому инвертор не считается ограниченным.",
+  "test_limit_that_is_not_enabled_has_no_effect": "Значение ограничения, записанное без флага включения, ничего не меняет.",
+  "test_limit_can_be_read_back": "Ограничение, его таймеры и флаг включения читаются обратно ровно такими, какими записаны.",
+  "test_removing_the_limit_brings_the_power_back_gently": "Когда ограничение снято, мощность возвращается по 1 кВт в секунду, а не одним скачком.",
+  "test_ramp_time_spreads_the_change_evenly": "При времени перехода 10 с мощность падает со 100 % до 50 % десятью равными шагами по 250 Вт.",
+  "test_ramp_also_applies_on_the_way_up": "Подъём ограничения с 20 % до 60 % при времени перехода 4 с идёт четырьмя равными шагами по 500 Вт.",
+  "test_limit_is_dropped_when_the_controller_goes_quiet": "Ограничение с таймаутом 30 секунд инвертор снимает сам, если его никто не продлевает.",
+  "test_renewing_the_limit_restarts_its_timer": "Повторная запись ограничения до истечения таймаута продлевает его на полный срок.",
+  "test_limit_of_zero_keeps_the_inverter_connected": "Ограничение 0 % сводит выход к нулю, но инвертор остаётся подключённым и готовым.",
+  "test_limit_holds_while_a_cloud_passes": "После прохода облака мощность поднимается обратно до ограничения и на нём останавливается.",
+  "test_output_never_overshoots_the_limit_during_start_up": "Инвертор, который запускается с уже заданным ограничением 30 %, ни разу не отдаёт больше 1500 Вт.",
+  "test_throttled_inverter_lets_the_array_voltage_rise": "Ограниченный инвертор берёт от панелей меньше, поэтому их напряжение поднимается выше 360 В.",
+  "test_limit_survives_the_night": "Ограничение без таймаута действует и на следующий день.",
+  "test_disconnect_command_stops_the_feed_in": "Получив команду отключиться, инвертор останавливается за секунду и сообщает STANDBY, без аварии.",
+  "test_reconnect_command_goes_through_the_grid_checks": "Получив команду подключиться снова, инвертор сначала 20 с проверяет сеть, а потом плавно стартует.",
+  "test_disconnect_with_a_timeout_reconnects_by_itself": "Команду отключения с таймаутом 30 секунд инвертор отменяет сам через 30 секунд.",
+  "test_hand_built_request_gets_a_valid_answer": "Восемь собранных вручную байт с вопросом о мощности получают ответ из семи байт: 5000 Вт в полдень.",
+  "test_answer_is_exactly_as_long_as_requested": "На чтение N регистров приходит ответ ровно из 5 + 2N байт, вплоть до предела в 125 регистров.",
+  "test_inverter_answers_quickly": "Ответ на чтение приходит за десятую долю секунды (плюс время байтов в настоящей линии).",
+  "test_unknown_function_is_refused_with_exception_1": "Функция, которую инвертор не поддерживает, отклоняется исключением 01, а не игнорируется.",
+  "test_missing_register_is_refused_with_exception_2": "Чтение несуществующего регистра отклоняется исключением 02.",
+  "test_read_running_past_the_end_is_refused": "Чтение, которое начинается с настоящего регистра и выходит за конец блока, отклоняется целиком.",
+  "test_impossible_count_is_refused_with_exception_3": "Запрос нуля регистров или больше 125 отклоняется исключением 03.",
+  "test_request_for_another_address_is_met_with_silence": "На запрос к другому устройству на той же линии ответа нет вообще.",
+  "test_broadcast_read_is_met_with_silence": "На чтение, отправленное всем (адрес 0), никто не отвечает: иначе все устройства заговорили бы разом.",
+  "test_broadcast_write_is_carried_out_without_an_answer": "Запись, отправленная всем (адрес 0), выполняется, и всё равно никто не отвечает.",
+  "test_damaged_frame_is_met_with_silence": "На запрос с одним повреждённым байтом, каким бы он ни был, ответа нет, и запрос учтён как повреждённый.",
+  "test_damaged_frame_does_not_disturb_the_next_one": "После повреждённого запроса следующий хороший запрос получает обычный ответ.",
+  "test_unfinished_frame_is_forgotten_after_silence": "Запрос, оборванный на середине, отбрасывается, когда линия замолкает, и на следующий приходит ответ.",
+  "test_noise_before_a_request_is_ignored": "Случайные байты на линии, после которых наступила тишина, не мешают инвертору отвечать.",
+  "test_request_arriving_in_two_pieces_is_understood": "Запрос, пришедший двумя порциями с паузой в несколько миллисекунд, как это делают USB-адаптеры, всё равно получает ответ.",
+  "test_overlong_burst_is_dropped": "Триста байт без паузы не могут быть кадром Modbus: они отбрасываются и учитываются.",
+  "test_write_single_is_confirmed_by_an_echo": "Запись одного регистра подтверждается ответом, который повторяет запрос.",
+  "test_write_multiple_is_confirmed_with_address_and_count": "Запись нескольких регистров подтверждается ответом с адресом и количеством.",
+  "test_write_with_wrong_byte_count_is_refused": "Запись, которая объявляет два регистра, а несёт байты одного, отклоняется исключением 03.",
+  "test_write_of_too_many_registers_is_refused": "Запись 124 регистров, на один больше разрешённого, отклоняется исключением 03.",
+  "test_counters_record_what_happened_on_the_line": "Диагностические счётчики вырастают ровно на число хороших, отклонённых, повреждённых и чужих кадров.",
+  "test_answer_repeats_the_transaction_number": "Ответ несёт номер своего запроса, чтобы клиент мог связать одно с другим.",
+  "test_network_frame_has_no_checksum": "Сетевой ответ — это заголовок из 7 байт и сообщение, больше ничего: TCP сам бережёт байты.",
+  "test_refusal_keeps_the_header": "На отклонённый запрос приходит тот же заголовок и сообщение об исключении из двух байт.",
+  "test_unknown_function_is_refused_on_tcp_too": "Функция, которую инвертор не поддерживает, и по сети отклоняется исключением 01.",
+  "test_wrong_protocol_number_closes_the_connection": "Заголовок, где поле протокола не 0, — это не Modbus: инвертор разрывает соединение, а не гадает.",
+  "test_impossible_length_closes_the_connection": "Заголовок с невозможной длиной заставляет инвертор разорвать соединение; остальных это не задевает.",
+  "test_request_for_another_unit_is_not_answered": "На запрос к чужому номеру устройства ответа нет, а соединение остаётся рабочим.",
+  "test_three_requests_in_one_packet_are_answered_in_order": "На три запроса, отправленные разом, ответы приходят по одному в том же порядке.",
+  "test_request_sent_one_byte_at_a_time_is_understood": "Запрос, который приходит по байту, как при медленной сети, всё равно получает ответ.",
+  "test_two_clients_get_their_own_answers": "Две программы, спрашивающие одновременно, получают ответы каждая на свои вопросы.",
+  "test_client_leaving_mid_request_does_not_harm_others": "Клиент, который отключился посреди запроса, не мешает инвертору обслуживать остальных.",
+  "test_fifty_connections_in_a_row_are_all_served": "Пятьдесят клиентов подряд подключаются, спрашивают один раз и уходят; ответ получает каждый.",
+  "test_measurements_cannot_be_overwritten": "Измерения, паспортные данные и сведения об устройстве только для чтения: запись отклоняется исключением 02.",
+  "test_skeleton_of_the_map_cannot_be_overwritten": "Метку, номера и длины моделей и конечную метку записать нельзя.",
+  "test_limit_above_100_percent_is_refused": "Ограничение мощности выше 100 % отклоняется исключением 03, прежнее ограничение остаётся.",
+  "test_values_the_inverter_cannot_honour_are_refused": "Переключатель не в 0 и не в 1, неподдерживаемая функция или слишком длинный таймер отклоняются исключением 03.",
+  "test_largest_allowed_values_are_accepted": "Наибольшее разрешённое значение каждой настройки принимается и читается обратно.",
+  "test_write_with_one_bad_value_changes_nothing": "Запись пяти регистров, где последнее значение неверное, отклоняется целиком: ни один регистр не меняется.",
+  "test_write_reaching_into_a_read_only_register_changes_nothing": "Запись, которая захватывает пять записываемых регистров и один только для чтения, отклоняется целиком.",
+  "test_five_limit_registers_can_be_set_in_one_request": "Ограничение, таймеры и флаг включения можно задать вместе, чтобы инвертор не увидел половину команды.",
+  "test_test_bench_block_refuses_impossible_settings": "Блок управления самого симулятора отклоняет настройки вне своих диапазонов исключением 03.",
+  "test_marker_and_counters_of_the_bench_block_are_read_only": "Метку симулятора, секунды и диагностические счётчики записать нельзя.",
+  "test_refusals_are_counted": "Каждый отклонённый запрос добавляет единицу к счётчику исключений инвертора.",
+  "test_reset_returns_the_inverter_to_its_factory_state": "После сброса часы, погода, команды и счётчик энергии возвращаются к начальным значениям.",
+  "test_reset_needs_its_key": "Сброс происходит только с ключом 0xC0DE; любое другое значение отклоняется, и ничего не сбрасывается.",
+  "test_negative_temperature_is_stored_as_twos_complement": "Температура воздуха -15,0 градуса записывается и читается как 16-битное значение 0xFF6A.",
+  "test_random_bytes_never_stop_the_inverter": "После любой порции случайных байт на линии инвертор отвечает на следующий хороший запрос.",
+  "test_request_with_up_to_three_flipped_bits_is_never_answered": "На запрос с одним, двумя или тремя перевёрнутыми битами ответа нет: контрольная сумма ловит каждую такую ошибку.",
+  "test_cut_off_write_is_never_carried_out": "Команда записи, оборванная в любом месте, не выполняется, даже частично.",
+  "test_every_read_gets_all_its_registers_or_a_refusal": "Любое чтение, с любого адреса и любого размера, возвращает ровно запрошенные регистры или ясный отказ.",
+  "test_every_write_is_confirmed_or_refused_and_the_map_stays_whole": "Любая запись либо подтверждается, либо отклоняется с причиной, и после неё каркас карты цел.",
+  "test_random_bytes_on_a_connection_never_stop_the_server": "Клиента, который шлёт случайные байты, в худшем случае отключают; остальных обслуживают как раньше.",
+  "test_five_hundred_polls_in_a_row": "Пятьсот чтений подряд проходят успешно, и инвертор не насчитал ни одного повреждённого кадра.",
+  "test_numbers_are_stored_big_endian": "Числа кладутся в регистры старшей частью вперёд; отрицательные записаны в дополнительном коде.",
+  "test_text_is_stored_two_characters_per_register_and_padded": "Текст занимает по два символа на регистр, а неиспользованный остаток заполнен нулевыми байтами.",
+  "test_text_round_trip": "Любой печатный текст до 32 символов без потерь проходит через 16 регистров.",
+  "test_missing_values_use_the_not_implemented_pattern": "Значение, которого у устройства нет, хранится условленным кодом и читается как «нет значения».",
+  "test_scale_factor_moves_the_decimal_point": "Масштабный множитель -2 означает два знака после запятой: значение регистра 2137 читается как 21,37.",
+  "test_signed_round_trip": "Любое 16-битное число со знаком, кроме зарезервированного кода, без потерь проходит через регистр.",
+  "test_map_has_no_gaps_and_no_overlaps": "Каждый регистр между меткой и конечной меткой принадлежит ровно одному значению.",
+  "test_scale_factors_point_at_real_scale_factor_points": "Каждое значение, которому нужен масштабный множитель, ссылается на существующий множитель в той же модели.",
+  "test_model_layout_equals_the_official_definition": "У каждого значения те же имя, место, размер, тип и масштабный множитель, что в официальной модели SunSpec.",
+  "test_only_points_the_standard_allows_are_writable": "Инвертор принимает запись только в те значения, которые стандарт помечает как записываемые.",
+  "test_state_and_event_numbers_equal_the_official_ones": "Коды состояний и событий — те самые числа, которые стандарт назначает этим именам.",
+  "test_map_starts_with_the_suns_marker": "Регистры 40000 и 40001 складываются в «SunS»: знак того, что устройство говорит на SunSpec.",
+  "test_models_form_a_chain_to_the_end_marker": "Если идти по длинам от модели к модели, путь ведёт через 1, 101, 120 и 123 к конечной метке.",
+  "test_length_register_equals_the_official_length": "Длина, которую объявляет каждая модель, равна длине из стандарта.",
+  "test_every_mandatory_value_is_present": "Каждое значение, которое стандарт называет обязательным, содержит настоящие данные, а не код «не реализовано».",
+  "test_absent_optional_values_say_not_implemented": "Необязательные значения, которых у этого инвертора нет, читаются как «не реализовано», а не как ноль.",
+  "test_common_model_names_the_device": "Первая модель говорит, кто сделал устройство, какая это модель и какой у неё серийный номер.",
+  "test_nameplate_states_the_ratings": "Паспортная модель говорит, что это солнечный инвертор на 5 кВт с током 21,7 А.",
+  "test_scale_factors_are_small_constants": "Масштабные множители лежат между -10 и 10 и не меняются, пока инвертор работает.",
+  "test_whole_map_read_in_blocks_equals_single_register_reads": "Чтение карты двумя большими блоками даёт те же регистры, что и чтение по одному.",
+  "test_input_registers_mirror_holding_registers": "Функция 04 (входные регистры) возвращает те же данные, что и функция 03 (регистры хранения).",
+  "test_every_view_opens_without_a_script_error": "Каждый из пяти разделов наглядной страницы открывается по своему адресу и работает без ошибок скрипта.",
+  "test_planted_bug_turns_its_own_check_red": "На живой странице включение посаженного бага красит в красный ровно соответствующую проверку.",
+  "test_healthy_inverter_keeps_every_check_green_for_a_day": "Без посаженного бага целые модельные сутки с аварией сети, ограничением и перегревом не красят ни одну проверку.",
+  "test_language_switch_translates_the_page": "Кнопка RU переводит заголовки и названия тестов на русский, а EN возвращает их обратно.",
+  "test_replay_shows_the_bytes_of_a_test": "Раскрытый тест в разделе прогона показывает свои шаги и кадры обмена, каждый с понятным предложением.",
+  "test_noise_button_breaks_the_checksum": "В разделе про провод один перевёрнутый бит делает две контрольные суммы разными, и вывод сообщает, что инвертор молчит.",
+  "test_page_fits_a_phone_screen": "При ширине телефона 390 px ни один раздел не прокручивается вбок."
+ },
+ "steps": [
+  [
+   "Set the clock to (\\d+:\\d+) and wait (\\d+) s",
+   "Поставить часы на $1 и подождать $2 с"
+  ],
+  [
+   "The official client scans the device: marker, then model after model",
+   "Официальный клиент просматривает устройство: метка, затем модель за моделью"
+  ],
+  [
+   "Send only the first (\\d+) of (\\d+) bytes, then stay quiet",
+   "Отправить только первые $1 из $2 байт и замолчать"
+  ],
+  [
+   "Send a complete request",
+   "Отправить запрос целиком"
+  ],
+  [
+   "Cool the heat sink to ([\\d.]+) C and wait",
+   "Остудить радиатор до $1 °C и подождать"
+  ],
+  [
+   "The grid disappears",
+   "Сеть пропадает"
+  ],
+  [
+   "The grid returns",
+   "Сеть возвращается"
+  ],
+  [
+   "One second later the soft start begins",
+   "Секундой позже начинается плавный пуск"
+  ],
+  [
+   "Heat the heat sink to ([\\d.]+) C",
+   "Нагреть радиатор до $1 °C"
+  ],
+  [
+   "Two hours at noon light in a (\\d+) C cabinet, read every (\\d+) s",
+   "Два часа полуденного света в шкафу с $1 °C, чтение каждые $2 с"
+  ],
+  [
+   "Run a whole clear day and read the power every (\\d+) minutes",
+   "Прогнать целый ясный день и читать мощность каждые $1 минут"
+  ],
+  [
+   "A thick cloud arrives",
+   "Приходит плотное облако"
+  ],
+  [
+   "The cloud leaves",
+   "Облако уходит"
+  ],
+  [
+   "An inverter that has been running since (\\d+:\\d+)",
+   "Инвертор, который работает с $1"
+  ],
+  [
+   "A fresh inverter that meets the same light",
+   "Свежий инвертор, который встречает тот же свет"
+  ],
+  [
+   "Let ten hours pass, across midnight",
+   "Пропустить десять часов, через полночь"
+  ],
+  [
+   "Write the limit: (\\d+) %, enabled",
+   "Записать ограничение: $1 %, включено"
+  ],
+  [
+   "Disable the limit",
+   "Выключить ограничение"
+  ],
+  [
+   "Second (\\d+) passes without a new command",
+   "Проходит секунда $1 без новой команды"
+  ],
+  [
+   "Renew the same limit at second (\\d+)",
+   "Продлить то же ограничение на секунде $1"
+  ],
+  [
+   "Sixteen hours later: noon of the next day",
+   "Шестнадцать часов спустя: полдень следующего дня"
+  ],
+  [
+   "Write limit (\\d+) %, timers (\\d+) s and (\\d+) s, and an invalid enable flag of (\\d+)",
+   "Записать ограничение $1 %, таймеры $2 с и $3 с и неверный флаг включения $4"
+  ],
+  [
+   "Change the time, the weather, the grid and the controls",
+   "Изменить время, погоду, сеть и команды"
+  ],
+  [
+   "Reset",
+   "Сброс"
+  ],
+  [
+   "Walk the chain: read id and length, jump ahead by the length, repeat",
+   "Пройти по цепочке: прочитать номер и длину, перескочить на длину вперёд, повторить"
+  ],
+  [
+   "Read the map in two blocks of at most (\\d+) registers",
+   "Прочитать карту двумя блоками не больше $1 регистров"
+  ],
+  [
+   "Read every register on its own",
+   "Прочитать каждый регистр отдельно"
+  ],
+  [
+   "Ask unit (\\d+)",
+   "Спросить устройство номер $1"
+  ],
+  [
+   "Ask the right unit on the same connection",
+   "Спросить нужное устройство по тому же соединению"
+  ],
+  [
+   "Send: address, (\\d+) \\(read\\), register (\\d+), count (\\d+), checksum",
+   "Отправить: адрес, $1 (чтение), регистр $2, количество $3, контрольная сумма"
+  ],
+  [
+   "Broadcast: set the cloud cover to (\\d+) %",
+   "Всем сразу: задать облачность $1 %"
+  ],
+  [
+   "Ask the inverter directly whether it took the value",
+   "Спросить инвертор напрямую, принял ли он значение"
+  ],
+  [
+   "Send a request with a wrong checksum",
+   "Отправить запрос с неверной контрольной суммой"
+  ],
+  [
+   "Send the same request undamaged",
+   "Отправить тот же запрос без повреждений"
+  ],
+  [
+   "Put (\\d+) bytes of noise on the line",
+   "Пустить в линию $1 байт шума"
+  ],
+  [
+   "Send a good request",
+   "Отправить хороший запрос"
+  ],
+  [
+   "(\\d+) good reads",
+   "$1 хороших чтений"
+  ],
+  [
+   "(\\d+) request that must be refused",
+   "$1 запрос, который должен быть отклонён"
+  ],
+  [
+   "(\\d+) requests with a wrong checksum",
+   "$1 запроса с неверной контрольной суммой"
+  ],
+  [
+   "(\\d+) request for another address",
+   "$1 запрос к другому адресу"
+  ],
+  [
+   "The complete command is carried out",
+   "Команда целиком выполняется"
+  ],
+  [
+   "Write (\\d+) %, window (\\d+), timeout (\\d+), ramp (\\d+), enabled, in one request",
+   "Записать $1 %, окно $2, таймаут $3, переход $4, включено, одним запросом"
+  ],
+  [
+   "Set WMaxLimPct = (\\d+) and WMaxLim_Ena = (\\d+), then write the model",
+   "Задать WMaxLimPct = $1 и WMaxLim_Ena = $2, затем записать модель"
+  ],
+  [
+   "Ask a device that never answers",
+   "Спросить устройство, которое никогда не отвечает"
+  ],
+  [
+   "A new connection is served as usual",
+   "Новое соединение обслуживается как обычно"
+  ],
+  [
+   "A second client sends half a header and disconnects",
+   "Второй клиент отправляет половину заголовка и отключается"
+  ],
+  [
+   "The first client asks as usual",
+   "Первый клиент спрашивает как обычно"
+  ]
+ ],
+ "areas": {
+  "wire": [
+   "On the wire",
+   "В проводе"
+  ],
+  "map": [
+   "Register map",
+   "Карта регистров"
+  ],
+  "sun": [
+   "Sun and power",
+   "Солнце и мощность"
+  ],
+  "safety": [
+   "Safety",
+   "Безопасность"
+  ],
+  "control": [
+   "Commands",
+   "Команды"
+  ],
+  "client": [
+   "The asking side",
+   "Спрашивающая сторона"
+  ]
+ },
+ "mutants": {
+  "M01": "Контрольная сумма считается с неверного начального значения",
+  "M02": "Два байта контрольной суммы отправляются в неверном порядке",
+  "M03": "Инвертор перестаёт проверять контрольную сумму и выполняет повреждённые запросы",
+  "M04": "Инвертор отвечает на запросы, адресованные другим устройствам",
+  "M05": "Команды, отправленные всем устройствам сразу, игнорируются",
+  "M06": "Половина запроса не забывается и портит следующий",
+  "M07": "Чтение 126 регистров, на один больше разрешённого, принимается",
+  "M08": "Чтение может выйти на один регистр за конец карты",
+  "M09": "Запрос несуществующего регистра отклоняется с неверным кодом причины",
+  "M10": "Сетевые ответы теряют номер, который связывает их с запросом",
+  "M11": "Сетевой порт принимает трафик, который не является Modbus",
+  "M12": "Карта начинается с «Suns» вместо «SunS»",
+  "M13": "Каждая модель объявляет длину на один регистр больше настоящей",
+  "M14": "Ток сообщается в десять раз больше (неверный масштабный множитель)",
+  "M15": "Температуры ниже нуля читаются как огромные положительные числа",
+  "M16": "Значения, которых у инвертора нет, читаются как ноль, а не как «не реализовано»",
+  "M17": "Регистры только для чтения больше не отклоняют запись как положено",
+  "M18": "Отклонённая команда всё равно выполняется до отказа",
+  "M19": "Сброс выполняется без ключа",
+  "M20": "При полном солнце инвертор сообщает об ограничении мощности, которого никто не задавал",
+  "M21": "Инвертор продолжает отдавать энергию, когда сети нет",
+  "M22": "После отключения инвертор подключается через 6 секунд вместо 60",
+  "M23": "Инвертор игнорирует ограничение мощности",
+  "M24": "Ограничение, которое никто не продлевает, остаётся навсегда",
+  "M25": "Продление ограничения не перезапускает его таймер",
+  "M26": "Защита от перегрева промахивается на волосок: при 95,0 градуса не срабатывает",
+  "M27": "После перегрева инвертор запускается, пока ещё горячий",
+  "M28": "Счётчик энергии считает мощность до потерь: на 3 % больше",
+  "M29": "Потери преобразования занижены на один процент",
+  "M30": "Нет плавного пуска: мощность прыгает до полной за один шаг",
+  "M31": "Инвертор пропускает проверку сети перед запуском",
+  "M32": "Инвертор игнорирует команду отключения",
+  "M33": "Инвертор слишком рано сдаётся в слабом вечернем свете",
+  "M34": "Часы уходят за полночь, и следующее утро не наступает",
+  "M35": "Облака гасят свет слабее, чем сказано в паспорте",
+  "M36": "Клиент перестаёт проверять контрольную сумму ответов",
+  "M37": "Клиент повторяет запрос, который устройство уже отклонило",
+  "M38": "Клиент принимает ответ от другого устройства"
+ }
+}

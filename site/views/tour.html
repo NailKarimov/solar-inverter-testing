@@ -1,0 +1,225 @@
+<section class="view" id="view-tour">
+  <header>
+    <h2>
+      <span class="en">What this project is, in two minutes</span>
+      <span class="ru">Что это за проект, за две минуты</span>
+    </h2>
+    <p class="lead">
+      <span class="en"
+        >A solar inverter turns sunlight from the roof into electricity for the house and the grid. Other machines talk
+        to it over a cable. This project builds a model of such an inverter and tests it the way a factory would test
+        the real one.</span
+      >
+      <span class="ru"
+        >Солнечный инвертор превращает свет с крыши в электричество для дома и сети. Другие машины разговаривают с ним
+        по кабелю. В этом проекте сделана модель такого инвертора, и она проверена так, как завод проверял бы настоящий
+        прибор.</span
+      >
+    </p>
+  </header>
+
+  <div class="stops">
+    <div class="stop">
+      <div class="num">1</div>
+      <div class="body">
+        <h3><span class="en">One day of an inverter</span><span class="ru">Один день инвертора</span></h3>
+        <div class="scene" id="tour-scene"></div>
+        <p id="tour-now" class="mono small"></p>
+        <p>
+          <span class="en"
+            >The picture runs through a clear June day in Riga. Power rises with the sun, stays flat at 5000 W around
+            noon because the inverter is built for 5 kW, and falls in the evening. At night the inverter sleeps.</span
+          >
+          <span class="ru"
+            >Картинка проходит ясный июньский день в Риге. Мощность растёт вместе с солнцем, около полудня держится на
+            5000 Вт, потому что инвертор рассчитан на 5 кВт, и падает к вечеру. Ночью инвертор спит.</span
+          >
+        </p>
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="num">2</div>
+      <div class="body">
+        <h3>
+          <span class="en">A computer asks, the inverter answers</span>
+          <span class="ru">Компьютер спрашивает, инвертор отвечает</span>
+        </h3>
+        <p>
+          <span class="en"
+            >The monitoring computer cannot look inside the inverter. It sends a short question down the cable, eight
+            bytes long, and gets a few bytes back. The language is called Modbus. The list of what can be asked is a
+            standard called SunSpec, so equipment from different makers understands each other.</span
+          >
+          <span class="ru"
+            >Компьютер мониторинга не может заглянуть внутрь инвертора. Он отправляет по кабелю короткий вопрос длиной
+            восемь байт и получает в ответ несколько байт. Этот язык называется Modbus. Список того, о чём можно
+            спросить, задан стандартом SunSpec, поэтому оборудование разных производителей понимает друг друга.</span
+          >
+        </p>
+        <div class="card talk" id="tour-talk"></div>
+        <div class="row">
+          <a class="btn" href="#wire"
+            ><span class="en">Take a message apart</span><span class="ru">Разобрать сообщение по байтам</span></a
+          >
+        </div>
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="num">3</div>
+      <div class="body">
+        <h3><span class="en">What can go wrong</span><span class="ru">Что может пойти не так</span></h3>
+        <div class="hazards">
+          <div class="card hazard">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 20h7l3-9 5 18 4-13 3 7 3-3h9" />
+            </svg>
+            <h3><span class="en">Noise on the cable</span><span class="ru">Помехи в кабеле</span></h3>
+            <p>
+              <span class="en">A motor starts nearby and one bit of a message flips.</span>
+              <span class="ru">Рядом включается мотор, и один бит сообщения переворачивается.</span>
+            </p>
+            <p class="rule">
+              <span class="en">A damaged message is never obeyed and never believed. The checksum catches it.</span>
+              <span class="ru">Повреждённое сообщение не выполняется и не принимается на веру. Его ловит контрольная сумма.</span>
+            </p>
+          </div>
+          <div class="card hazard">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 36l5-26h6l5 26M9 16h22M11 24h18M20 10V4M14 30l12-6M26 30l-12-6" />
+            </svg>
+            <h3><span class="en">The grid goes down</span><span class="ru">Пропала сеть</span></h3>
+            <p>
+              <span class="en">Electricians start repairing the line outside.</span>
+              <span class="ru">Электрики начинают чинить линию на улице.</span>
+            </p>
+            <p class="rule">
+              <span class="en">The inverter stops feeding in within one second and waits a full minute after the grid is back.</span>
+              <span class="ru">Инвертор за секунду перестаёт отдавать энергию и ждёт полную минуту после возвращения сети.</span>
+            </p>
+          </div>
+          <div class="card hazard">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M17 6a3 3 0 0 1 6 0v16.5a8 8 0 1 1-6 0zM20 14v14" />
+              <circle cx="20" cy="30" r="3" fill="currentColor" />
+            </svg>
+            <h3><span class="en">Overheating</span><span class="ru">Перегрев</span></h3>
+            <p>
+              <span class="en">A hot day, a closed cabinet, full power for hours.</span>
+              <span class="ru">Жаркий день, закрытый шкаф, полная мощность несколько часов.</span>
+            </p>
+            <p class="rule">
+              <span class="en">At 95 °C the inverter stops. It starts again only when it is down to 75 °C.</span>
+              <span class="ru">При 95 °C инвертор останавливается. Запускается снова, только остыв до 75 °C.</span>
+            </p>
+          </div>
+          <div class="card hazard">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="20" cy="20" r="15" />
+              <path d="M10 10l20 20" />
+            </svg>
+            <h3><span class="en">A wrong command</span><span class="ru">Неверная команда</span></h3>
+            <p>
+              <span class="en">Somebody asks for 150 % power, or half a command gets lost on the way.</span>
+              <span class="ru">Кто-то требует 150 % мощности, или половина команды теряется по дороге.</span>
+            </p>
+            <p class="rule">
+              <span class="en">The inverter refuses the whole command, says why, and changes nothing.</span>
+              <span class="ru">Инвертор отклоняет команду целиком, называет причину и ничего не меняет.</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="num">4</div>
+      <div class="body">
+        <h3><span class="en">How it is tested</span><span class="ru">Как это проверяется</span></h3>
+        <p>
+          <span class="en"
+            >Each rule above became automatic checks. Every check is one plain sentence, such as
+            <em>"When the grid disappears the inverter stops feeding in within one second"</em>, plus the code that
+            proves it. The checks run again after every change to the project.</span
+          >
+          <span class="ru"
+            >Каждое правило выше превратилось в автоматические проверки. Каждая проверка — это одно понятное
+            предложение, например
+            <em>«Когда сеть пропадает, инвертор за секунду перестаёт отдавать энергию»</em>, и код, который это
+            доказывает. Проверки запускаются заново после каждого изменения проекта.</span
+          >
+        </p>
+        <div class="card tiles" id="tour-tiles"></div>
+        <p>
+          <span class="en"
+            >Three independent programs ask the questions. If our own program had the same mistake as the inverter, the
+            other two would notice.</span
+          >
+          <span class="ru"
+            >Вопросы задают три независимые программы. Если бы наша программа ошибалась так же, как инвертор, две
+            другие это заметили бы.</span
+          >
+        </p>
+        <div class="tools">
+          <div class="card">
+            <h3><span class="en">Bytes built by hand</span><span class="ru">Байты, собранные вручную</span></h3>
+            <p>
+              <span class="en">The project's own client. It can also send broken messages on purpose.</span>
+              <span class="ru">Собственный клиент проекта. Он умеет и нарочно отправлять испорченные сообщения.</span>
+            </p>
+          </div>
+          <div class="card">
+            <h3>pymodbus</h3>
+            <p>
+              <span class="en">A widely used Modbus library written by other people.</span>
+              <span class="ru">Распространённая библиотека Modbus, написанная другими людьми.</span>
+            </p>
+          </div>
+          <div class="card">
+            <h3>pysunspec2</h3>
+            <p>
+              <span class="en">The official client of the SunSpec Alliance, the authors of the standard.</span>
+              <span class="ru">Официальный клиент альянса SunSpec, авторов стандарта.</span>
+            </p>
+          </div>
+        </div>
+        <div class="row">
+          <a class="btn" href="#replay"
+            ><span class="en">Read the checks and their bytes</span><span class="ru">Прочитать проверки и их байты</span></a
+          >
+        </div>
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="num">5</div>
+      <div class="body">
+        <h3>
+          <span class="en">How we know the checks are any good</span>
+          <span class="ru">Откуда известно, что проверки чего-то стоят</span>
+        </h3>
+        <p>
+          <span class="en"
+            >A check that never fails proves nothing. So the inverter is broken on purpose, one small bug at a time, and
+            all checks run again. A good set of checks notices every bug.</span
+          >
+          <span class="ru"
+            >Проверка, которая никогда не падает, ничего не доказывает. Поэтому инвертор ломают нарочно, по одному
+            маленькому багу за раз, и запускают все проверки снова. Хороший набор проверок замечает каждый баг.</span
+          >
+        </p>
+        <div class="card" style="display: grid; gap: 10px">
+          <div class="dots" id="tour-dots"></div>
+          <div id="tour-hunt"></div>
+        </div>
+        <div class="row">
+          <a class="btn primary" href="#live"
+            ><span class="en">Plant a bug yourself</span><span class="ru">Посадить баг самому</span></a
+          >
+          <a class="btn" href="#bugs"><span class="en">See all planted bugs</span><span class="ru">Все посаженные баги</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

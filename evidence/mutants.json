@@ -1,0 +1,1894 @@
+{
+ "meta": {
+  "finished": "2026-11-14T22:48:58Z",
+  "commit": "",
+  "total": 38,
+  "caught": 38,
+  "control": true,
+  "seconds": 1739
+ },
+ "mutants": [
+  {
+   "id": "M01",
+   "area": "wire",
+   "file": "src/inverter_lab/crc.py",
+   "title": "The checksum is calculated from the wrong starting value",
+   "link": "memory",
+   "old": "INIT = 0xFFFF",
+   "new": "INIT = 0x0000",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_crc.py::test_textbook_request_has_the_textbook_checksum",
+     "name": "test_textbook_request_has_the_textbook_checksum",
+     "title": "The request 01 03 00 00 00 02 from the Modbus textbooks gets the checksum C4 0B.",
+     "suite": "test_crc"
+    },
+    {
+     "id": "tests/test_crc.py::test_known_checksums[catalogue-check-value]",
+     "name": "test_known_checksums",
+     "title": "Published examples give the published checksums.",
+     "suite": "test_crc"
+    },
+    {
+     "id": "tests/test_crc.py::test_known_checksums[spec-read-example]",
+     "name": "test_known_checksums",
+     "title": "Published examples give the published checksums.",
+     "suite": "test_crc"
+    },
+    {
+     "id": "tests/test_crc.py::test_known_checksums[unit-17-read]",
+     "name": "test_known_checksums",
+     "title": "Published examples give the published checksums.",
+     "suite": "test_crc"
+    },
+    {
+     "id": "tests/test_crc.py::test_known_checksums[empty]",
+     "name": "test_known_checksums",
+     "title": "Published examples give the published checksums.",
+     "suite": "test_crc"
+    },
+    {
+     "id": "tests/test_crc.py::test_known_checksums[single-zero]",
+     "name": "test_known_checksums",
+     "title": "Published examples give the published checksums.",
+     "suite": "test_crc"
+    },
+    {
+     "id": "tests/test_crc.py::test_checksum_goes_low_byte_first",
+     "name": "test_checksum_goes_low_byte_first",
+     "title": "On the wire the low byte of the checksum is sent before the high byte.",
+     "suite": "test_crc"
+    },
+    {
+     "id": "tests/test_frames.py::test_rtu_frame_is_address_then_message_then_checksum",
+     "name": "test_rtu_frame_is_address_then_message_then_checksum",
+     "title": "A serial frame is the device address, the message and the checksum, in that order.",
+     "suite": "test_frames"
+    }
+   ],
+   "killer_count": 8,
+   "seconds": 33.4
+  },
+  {
+   "id": "M02",
+   "area": "wire",
+   "file": "src/inverter_lab/crc.py",
+   "title": "The two checksum bytes are sent in the wrong order",
+   "link": "memory",
+   "old": "crc16(body).to_bytes(2, \"little\")",
+   "new": "crc16(body).to_bytes(2, \"big\")",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_client_noise.py::test_client_never_hands_out_a_damaged_value[1-bit-in-400]",
+     "name": "test_client_never_hands_out_a_damaged_value",
+     "title": "With one bit in 400 flipped on the line, 300 readings give the true values or an error, never a wrong value.",
+     "suite": "test_client_noise"
+    },
+    {
+     "id": "tests/test_client_noise.py::test_retries_get_the_true_value_through_a_bad_line[1-bit-in-2000-with-retries]",
+     "name": "test_retries_get_the_true_value_through_a_bad_line",
+     "title": "With retries allowed, 200 readings over a noisy line all end with the true values.",
+     "suite": "test_client_noise"
+    },
+    {
+     "id": "tests/test_client_noise.py::test_good_answer_is_accepted",
+     "name": "test_good_answer_is_accepted",
+     "title": "An undamaged answer from the right device is accepted.",
+     "suite": "test_client_noise"
+    },
+    {
+     "id": "tests/test_client_noise.py::test_answer_from_another_device_is_rejected",
+     "name": "test_answer_from_another_device_is_rejected",
+     "title": "A perfectly valid answer that comes from another address is rejected.",
+     "suite": "test_client_noise"
+    },
+    {
+     "id": "tests/test_client_noise.py::test_answer_to_another_question_is_rejected",
+     "name": "test_answer_to_another_question_is_rejected",
+     "title": "A valid frame that answers a different function than the one asked is rejected.",
+     "suite": "test_client_noise"
+    },
+    {
+     "id": "tests/test_client_noise.py::test_answer_with_the_wrong_number_of_registers_is_rejected",
+     "name": "test_answer_with_the_wrong_number_of_registers_is_rejected",
+     "title": "An answer that carries one register when two were asked for is rejected.",
+     "suite": "test_client_noise"
+    },
+    {
+     "id": "tests/test_client_noise.py::test_write_confirmed_with_another_value_is_rejected",
+     "name": "test_write_confirmed_with_another_value_is_rejected",
+     "title": "A write whose confirmation repeats a different value than the one sent is rejected.",
+     "suite": "test_client_noise"
+    },
+    {
+     "id": "tests/test_client_noise.py::test_refusal_is_not_asked_again",
+     "name": "test_refusal_is_not_asked_again",
+     "title": "A refusal from the device is final: the client reports it and does not repeat the request.",
+     "suite": "test_client_noise"
+    },
+    {
+     "id": "tests/test_client_noise.py::test_damaged_answer_is_asked_again",
+     "name": "test_damaged_answer_is_asked_again",
+     "title": "After a damaged answer the client repeats the request and takes the good answer.",
+     "suite": "test_client_noise"
+    },
+    {
+     "id": "tests/test_crc.py::test_textbook_request_has_the_textbook_checksum",
+     "name": "test_textbook_request_has_the_textbook_checksum",
+     "title": "The request 01 03 00 00 00 02 from the Modbus textbooks gets the checksum C4 0B.",
+     "suite": "test_crc"
+    },
+    {
+     "id": "tests/test_crc.py::test_checksum_goes_low_byte_first",
+     "name": "test_checksum_goes_low_byte_first",
+     "title": "On the wire the low byte of the checksum is sent before the high byte.",
+     "suite": "test_crc"
+    },
+    {
+     "id": "tests/test_crc.py::test_a_frame_with_its_checksum_is_accepted",
+     "name": "test_a_frame_with_its_checksum_is_accepted",
+     "title": "Any message followed by its own checksum is accepted as undamaged.",
+     "suite": "test_crc"
+    }
+   ],
+   "killer_count": 231,
+   "seconds": 993.2
+  },
+  {
+   "id": "M03",
+   "area": "wire",
+   "file": "src/inverter_lab/server.py",
+   "title": "The inverter stops checking the checksum and obeys damaged requests",
+   "link": "memory",
+   "old": "        if not crc_ok(frame):\n            self._count(\"crc_errors\")\n            return False",
+   "new": "        if False:\n            self._count(\"crc_errors\")\n            return False",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_protocol_rtu.py::test_damaged_frame_is_met_with_silence[0]",
+     "name": "test_damaged_frame_is_met_with_silence",
+     "title": "A request with one damaged byte, whichever byte it is, gets no answer and is counted as damaged.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_damaged_frame_is_met_with_silence[2]",
+     "name": "test_damaged_frame_is_met_with_silence",
+     "title": "A request with one damaged byte, whichever byte it is, gets no answer and is counted as damaged.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_damaged_frame_is_met_with_silence[3]",
+     "name": "test_damaged_frame_is_met_with_silence",
+     "title": "A request with one damaged byte, whichever byte it is, gets no answer and is counted as damaged.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_damaged_frame_is_met_with_silence[4]",
+     "name": "test_damaged_frame_is_met_with_silence",
+     "title": "A request with one damaged byte, whichever byte it is, gets no answer and is counted as damaged.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_damaged_frame_is_met_with_silence[5]",
+     "name": "test_damaged_frame_is_met_with_silence",
+     "title": "A request with one damaged byte, whichever byte it is, gets no answer and is counted as damaged.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_damaged_frame_is_met_with_silence[6]",
+     "name": "test_damaged_frame_is_met_with_silence",
+     "title": "A request with one damaged byte, whichever byte it is, gets no answer and is counted as damaged.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_damaged_frame_is_met_with_silence[7]",
+     "name": "test_damaged_frame_is_met_with_silence",
+     "title": "A request with one damaged byte, whichever byte it is, gets no answer and is counted as damaged.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_damaged_frame_does_not_disturb_the_next_one",
+     "name": "test_damaged_frame_does_not_disturb_the_next_one",
+     "title": "After a damaged request the very next good request is answered as usual.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_counters_record_what_happened_on_the_line",
+     "name": "test_counters_record_what_happened_on_the_line",
+     "title": "The diagnostic counters grow by exactly the number of good, refused, damaged and foreign frames sent.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_robustness.py::test_request_with_up_to_three_flipped_bits_is_never_answered",
+     "name": "test_request_with_up_to_three_flipped_bits_is_never_answered",
+     "title": "A request with one, two or three flipped bits is never answered: the checksum catches every such error.",
+     "suite": "test_robustness"
+    }
+   ],
+   "killer_count": 10,
+   "seconds": 31.4
+  },
+  {
+   "id": "M04",
+   "area": "wire",
+   "file": "src/inverter_lab/server.py",
+   "title": "The inverter answers requests addressed to other devices",
+   "link": "memory",
+   "old": "        elif unit != self.device.unit:\n            self._count",
+   "new": "        elif False:\n            self._count",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_protocol_rtu.py::test_request_for_another_address_is_met_with_silence[2]",
+     "name": "test_request_for_another_address_is_met_with_silence",
+     "title": "A request addressed to another device on the same line gets no answer at all.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_request_for_another_address_is_met_with_silence[3]",
+     "name": "test_request_for_another_address_is_met_with_silence",
+     "title": "A request addressed to another device on the same line gets no answer at all.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_request_for_another_address_is_met_with_silence[17]",
+     "name": "test_request_for_another_address_is_met_with_silence",
+     "title": "A request addressed to another device on the same line gets no answer at all.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_request_for_another_address_is_met_with_silence[100]",
+     "name": "test_request_for_another_address_is_met_with_silence",
+     "title": "A request addressed to another device on the same line gets no answer at all.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_request_for_another_address_is_met_with_silence[247]",
+     "name": "test_request_for_another_address_is_met_with_silence",
+     "title": "A request addressed to another device on the same line gets no answer at all.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_counters_record_what_happened_on_the_line",
+     "name": "test_counters_record_what_happened_on_the_line",
+     "title": "The diagnostic counters grow by exactly the number of good, refused, damaged and foreign frames sent.",
+     "suite": "test_protocol_rtu"
+    }
+   ],
+   "killer_count": 6,
+   "seconds": 31.9
+  },
+  {
+   "id": "M05",
+   "area": "wire",
+   "file": "src/inverter_lab/server.py",
+   "title": "Commands sent to all devices at once are ignored",
+   "link": "memory",
+   "old": "        if unit == rtu.BROADCAST:",
+   "new": "        if False:",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_protocol_rtu.py::test_broadcast_write_is_carried_out_without_an_answer",
+     "name": "test_broadcast_write_is_carried_out_without_an_answer",
+     "title": "A write sent to everyone (address 0) is carried out, and still nobody answers.",
+     "suite": "test_protocol_rtu"
+    }
+   ],
+   "killer_count": 1,
+   "seconds": 32.9
+  },
+  {
+   "id": "M06",
+   "area": "wire",
+   "file": "src/inverter_lab/server.py",
+   "title": "Half a request is not forgotten and spoils the next one",
+   "link": "memory",
+   "old": "                buf = b\"\"\n                resync = False\n                continue",
+   "new": "                resync = False\n                continue",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_protocol_rtu.py::test_unknown_function_is_refused_with_exception_1[1]",
+     "name": "test_unknown_function_is_refused_with_exception_1",
+     "title": "A function the inverter does not support is refused with exception 01, not ignored.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_unknown_function_is_refused_with_exception_1[2]",
+     "name": "test_unknown_function_is_refused_with_exception_1",
+     "title": "A function the inverter does not support is refused with exception 01, not ignored.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_unknown_function_is_refused_with_exception_1[5]",
+     "name": "test_unknown_function_is_refused_with_exception_1",
+     "title": "A function the inverter does not support is refused with exception 01, not ignored.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_unknown_function_is_refused_with_exception_1[7]",
+     "name": "test_unknown_function_is_refused_with_exception_1",
+     "title": "A function the inverter does not support is refused with exception 01, not ignored.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_unknown_function_is_refused_with_exception_1[15]",
+     "name": "test_unknown_function_is_refused_with_exception_1",
+     "title": "A function the inverter does not support is refused with exception 01, not ignored.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_unknown_function_is_refused_with_exception_1[17]",
+     "name": "test_unknown_function_is_refused_with_exception_1",
+     "title": "A function the inverter does not support is refused with exception 01, not ignored.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_unknown_function_is_refused_with_exception_1[23]",
+     "name": "test_unknown_function_is_refused_with_exception_1",
+     "title": "A function the inverter does not support is refused with exception 01, not ignored.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_unknown_function_is_refused_with_exception_1[43]",
+     "name": "test_unknown_function_is_refused_with_exception_1",
+     "title": "A function the inverter does not support is refused with exception 01, not ignored.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_unknown_function_is_refused_with_exception_1[65]",
+     "name": "test_unknown_function_is_refused_with_exception_1",
+     "title": "A function the inverter does not support is refused with exception 01, not ignored.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_unknown_function_is_refused_with_exception_1[127]",
+     "name": "test_unknown_function_is_refused_with_exception_1",
+     "title": "A function the inverter does not support is refused with exception 01, not ignored.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_damaged_frame_is_met_with_silence[1]",
+     "name": "test_damaged_frame_is_met_with_silence",
+     "title": "A request with one damaged byte, whichever byte it is, gets no answer and is counted as damaged.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_unfinished_frame_is_forgotten_after_silence[1]",
+     "name": "test_unfinished_frame_is_forgotten_after_silence",
+     "title": "A request that stops halfway is dropped when the line goes quiet, and the next one is answered.",
+     "suite": "test_protocol_rtu"
+    }
+   ],
+   "killer_count": 21,
+   "seconds": 1277.4
+  },
+  {
+   "id": "M07",
+   "area": "wire",
+   "file": "src/inverter_lab/pdu.py",
+   "title": "A read of 126 registers, one more than the protocol allows, is accepted",
+   "link": "memory",
+   "old": "MAX_READ = 125",
+   "new": "MAX_READ = 126",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_protocol_rtu.py::test_impossible_count_is_refused_with_exception_3[126]",
+     "name": "test_impossible_count_is_refused_with_exception_3",
+     "title": "Asking for zero registers or for more than 125 is refused with exception 03.",
+     "suite": "test_protocol_rtu"
+    }
+   ],
+   "killer_count": 1,
+   "seconds": 33.7
+  },
+  {
+   "id": "M08",
+   "area": "wire",
+   "file": "src/inverter_lab/sunspec.py",
+   "title": "A read may run one register past the end of the map",
+   "link": "memory",
+   "old": "address + count <= self.base + self.size",
+   "new": "address + count <= self.base + self.size + 1",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_protocol_rtu.py::test_missing_register_is_refused_with_exception_2[40178]",
+     "name": "test_missing_register_is_refused_with_exception_2",
+     "title": "Reading a register that does not exist is refused with exception 02.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_read_running_past_the_end_is_refused[40170-9]",
+     "name": "test_read_running_past_the_end_is_refused",
+     "title": "A read that starts on a real register and runs past the end of the block is refused as a whole.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_read_running_past_the_end_is_refused[40177-2]",
+     "name": "test_read_running_past_the_end_is_refused",
+     "title": "A read that starts on a real register and runs past the end of the block is refused as a whole.",
+     "suite": "test_protocol_rtu"
+    }
+   ],
+   "killer_count": 3,
+   "seconds": 33.2
+  },
+  {
+   "id": "M09",
+   "area": "wire",
+   "file": "src/inverter_lab/device.py",
+   "title": "A request for a missing register is refused with the wrong reason code",
+   "link": "memory",
+   "old": "        except IllegalAddress:\n            return exception_response(function, ExceptionCode.ILLEGAL_DATA_ADDRESS)",
+   "new": "        except IllegalAddress:\n            return exception_response(function, ExceptionCode.ILLEGAL_DATA_VALUE)",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_protocol_rtu.py::test_missing_register_is_refused_with_exception_2[0]",
+     "name": "test_missing_register_is_refused_with_exception_2",
+     "title": "Reading a register that does not exist is refused with exception 02.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_missing_register_is_refused_with_exception_2[99]",
+     "name": "test_missing_register_is_refused_with_exception_2",
+     "title": "Reading a register that does not exist is refused with exception 02.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_missing_register_is_refused_with_exception_2[116]",
+     "name": "test_missing_register_is_refused_with_exception_2",
+     "title": "Reading a register that does not exist is refused with exception 02.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_missing_register_is_refused_with_exception_2[39999]",
+     "name": "test_missing_register_is_refused_with_exception_2",
+     "title": "Reading a register that does not exist is refused with exception 02.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_missing_register_is_refused_with_exception_2[40178]",
+     "name": "test_missing_register_is_refused_with_exception_2",
+     "title": "Reading a register that does not exist is refused with exception 02.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_missing_register_is_refused_with_exception_2[65535]",
+     "name": "test_missing_register_is_refused_with_exception_2",
+     "title": "Reading a register that does not exist is refused with exception 02.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_read_running_past_the_end_is_refused[40170-9]",
+     "name": "test_read_running_past_the_end_is_refused",
+     "title": "A read that starts on a real register and runs past the end of the block is refused as a whole.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_read_running_past_the_end_is_refused[40177-2]",
+     "name": "test_read_running_past_the_end_is_refused",
+     "title": "A read that starts on a real register and runs past the end of the block is refused as a whole.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_read_running_past_the_end_is_refused[115-2]",
+     "name": "test_read_running_past_the_end_is_refused",
+     "title": "A read that starts on a real register and runs past the end of the block is refused as a whole.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_read_running_past_the_end_is_refused[39999-2]",
+     "name": "test_read_running_past_the_end_is_refused",
+     "title": "A read that starts on a real register and runs past the end of the block is refused as a whole.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_read_running_past_the_end_is_refused[98-3]",
+     "name": "test_read_running_past_the_end_is_refused",
+     "title": "A read that starts on a real register and runs past the end of the block is refused as a whole.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_register_access.py::test_measurements_cannot_be_overwritten[101-W]",
+     "name": "test_measurements_cannot_be_overwritten",
+     "title": "Measurements, ratings and identity are read-only: a write is refused with exception 02.",
+     "suite": "test_register_access"
+    }
+   ],
+   "killer_count": 36,
+   "seconds": 33.3
+  },
+  {
+   "id": "M10",
+   "area": "wire",
+   "file": "src/inverter_lab/server.py",
+   "title": "Network answers lose the number that ties them to their request",
+   "link": "tcp",
+   "old": "mbap.encode(transaction, unit, self.device.respond(pdu))",
+   "new": "mbap.encode(0, unit, self.device.respond(pdu))",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_grid_safety.py::test_grid_loss_stops_the_feed_in_within_a_second",
+     "name": "test_grid_loss_stops_the_feed_in_within_a_second",
+     "title": "When the grid disappears the inverter stops feeding in within one second, so nobody repairs a live line.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_grid_loss_is_reported_as_a_fault",
+     "name": "test_grid_loss_is_reported_as_a_fault",
+     "title": "During a grid outage the inverter reports FAULT with the event GRID_DISCONNECT, zero volts and zero hertz.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_inverter_waits_a_minute_after_the_grid_returns",
+     "name": "test_inverter_waits_a_minute_after_the_grid_returns",
+     "title": "After the grid returns the inverter waits a full 60 seconds before it feeds in again.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_even_a_one_second_dip_costs_the_full_minute",
+     "name": "test_even_a_one_second_dip_costs_the_full_minute",
+     "title": "A grid dip of a single second is treated like any outage: the full 60-second wait follows.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_fault_flag_clears_when_the_grid_is_back",
+     "name": "test_fault_flag_clears_when_the_grid_is_back",
+     "title": "The GRID_DISCONNECT event disappears as soon as the grid is back, while the inverter still waits.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_grid_loss_at_night_is_still_reported",
+     "name": "test_grid_loss_at_night_is_still_reported",
+     "title": "A grid outage at night is reported as a fault too, and afterwards the inverter goes back to sleep.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_overheating_stops_the_inverter",
+     "name": "test_overheating_stops_the_inverter",
+     "title": "When the heat sink reaches 95 degrees the inverter stops and reports OVER_TEMP.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_trip_threshold_is_exactly_95_degrees[94.9-False]",
+     "name": "test_trip_threshold_is_exactly_95_degrees",
+     "title": "At 94.9 degrees the inverter keeps running; at 95.0 it stops.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_trip_threshold_is_exactly_95_degrees[95.0-True]",
+     "name": "test_trip_threshold_is_exactly_95_degrees",
+     "title": "At 94.9 degrees the inverter keeps running; at 95.0 it stops.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_restart_threshold_is_exactly_75_degrees[75.1-False]",
+     "name": "test_restart_threshold_is_exactly_75_degrees",
+     "title": "After a trip the inverter stays off at 75.1 degrees and starts again at 75.0.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_restart_threshold_is_exactly_75_degrees[75.0-True]",
+     "name": "test_restart_threshold_is_exactly_75_degrees",
+     "title": "After a trip the inverter stays off at 75.1 degrees and starts again at 75.0.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_hot_cabinet_makes_the_inverter_cycle_but_never_cook",
+     "name": "test_hot_cabinet_makes_the_inverter_cycle_but_never_cook",
+     "title": "In a 60-degree cabinet the inverter trips, cools, restarts and trips again; it never runs past 95 degrees.",
+     "suite": "test_grid_safety"
+    }
+   ],
+   "killer_count": 185,
+   "seconds": 15.8
+  },
+  {
+   "id": "M11",
+   "area": "wire",
+   "file": "src/inverter_lab/server.py",
+   "title": "The network port accepts traffic that is not Modbus",
+   "link": "tcp",
+   "old": "if protocol != mbap.PROTOCOL_ID or not 2 <= length <= mbap.MAX_PDU + 1:",
+   "new": "if not 2 <= length <= mbap.MAX_PDU + 1:",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_protocol_tcp.py::test_wrong_protocol_number_closes_the_connection",
+     "name": "test_wrong_protocol_number_closes_the_connection",
+     "title": "A header whose protocol field is not 0 is not Modbus: the inverter hangs up instead of guessing.",
+     "suite": "test_protocol_tcp"
+    }
+   ],
+   "killer_count": 1,
+   "seconds": 14.3
+  },
+  {
+   "id": "M12",
+   "area": "map",
+   "file": "src/inverter_lab/sunspec.py",
+   "title": "The map starts with \"Suns\" instead of \"SunS\"",
+   "link": "memory",
+   "old": "MARKER = (0x5375, 0x6E53)  # \"Su\", \"nS\"",
+   "new": "MARKER = (0x5375, 0x6E73)  # \"Su\", \"ns\"",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_protocol_rtu.py::test_damaged_frame_does_not_disturb_the_next_one",
+     "name": "test_damaged_frame_does_not_disturb_the_next_one",
+     "title": "After a damaged request the very next good request is answered as usual.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_unfinished_frame_is_forgotten_after_silence[1]",
+     "name": "test_unfinished_frame_is_forgotten_after_silence",
+     "title": "A request that stops halfway is dropped when the line goes quiet, and the next one is answered.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_unfinished_frame_is_forgotten_after_silence[2]",
+     "name": "test_unfinished_frame_is_forgotten_after_silence",
+     "title": "A request that stops halfway is dropped when the line goes quiet, and the next one is answered.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_unfinished_frame_is_forgotten_after_silence[3]",
+     "name": "test_unfinished_frame_is_forgotten_after_silence",
+     "title": "A request that stops halfway is dropped when the line goes quiet, and the next one is answered.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_unfinished_frame_is_forgotten_after_silence[4]",
+     "name": "test_unfinished_frame_is_forgotten_after_silence",
+     "title": "A request that stops halfway is dropped when the line goes quiet, and the next one is answered.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_unfinished_frame_is_forgotten_after_silence[5]",
+     "name": "test_unfinished_frame_is_forgotten_after_silence",
+     "title": "A request that stops halfway is dropped when the line goes quiet, and the next one is answered.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_unfinished_frame_is_forgotten_after_silence[6]",
+     "name": "test_unfinished_frame_is_forgotten_after_silence",
+     "title": "A request that stops halfway is dropped when the line goes quiet, and the next one is answered.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_unfinished_frame_is_forgotten_after_silence[7]",
+     "name": "test_unfinished_frame_is_forgotten_after_silence",
+     "title": "A request that stops halfway is dropped when the line goes quiet, and the next one is answered.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_noise_before_a_request_is_ignored",
+     "name": "test_noise_before_a_request_is_ignored",
+     "title": "Random bytes on the line, followed by silence, do not stop the inverter from answering.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_request_arriving_in_two_pieces_is_understood",
+     "name": "test_request_arriving_in_two_pieces_is_understood",
+     "title": "A request delivered in two bursts a few milliseconds apart, as USB adapters do, is still answered.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_protocol_rtu.py::test_overlong_burst_is_dropped",
+     "name": "test_overlong_burst_is_dropped",
+     "title": "Three hundred bytes with no pause cannot be a Modbus frame: they are dropped and counted.",
+     "suite": "test_protocol_rtu"
+    },
+    {
+     "id": "tests/test_robustness.py::test_random_bytes_never_stop_the_inverter",
+     "name": "test_random_bytes_never_stop_the_inverter",
+     "title": "After any burst of random bytes on the line the inverter still answers the next good request.",
+     "suite": "test_robustness"
+    }
+   ],
+   "killer_count": 14,
+   "seconds": 41.9
+  },
+  {
+   "id": "M13",
+   "area": "map",
+   "file": "src/inverter_lab/sunspec.py",
+   "title": "Every model announces a length one register too long",
+   "link": "memory",
+   "old": "registers += [model.id, model.length]",
+   "new": "registers += [model.id, model.length + 1]",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_grid_safety.py::test_grid_loss_stops_the_feed_in_within_a_second",
+     "name": "test_grid_loss_stops_the_feed_in_within_a_second",
+     "title": "When the grid disappears the inverter stops feeding in within one second, so nobody repairs a live line.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_grid_loss_is_reported_as_a_fault",
+     "name": "test_grid_loss_is_reported_as_a_fault",
+     "title": "During a grid outage the inverter reports FAULT with the event GRID_DISCONNECT, zero volts and zero hertz.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_inverter_waits_a_minute_after_the_grid_returns",
+     "name": "test_inverter_waits_a_minute_after_the_grid_returns",
+     "title": "After the grid returns the inverter waits a full 60 seconds before it feeds in again.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_even_a_one_second_dip_costs_the_full_minute",
+     "name": "test_even_a_one_second_dip_costs_the_full_minute",
+     "title": "A grid dip of a single second is treated like any outage: the full 60-second wait follows.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_fault_flag_clears_when_the_grid_is_back",
+     "name": "test_fault_flag_clears_when_the_grid_is_back",
+     "title": "The GRID_DISCONNECT event disappears as soon as the grid is back, while the inverter still waits.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_grid_loss_at_night_is_still_reported",
+     "name": "test_grid_loss_at_night_is_still_reported",
+     "title": "A grid outage at night is reported as a fault too, and afterwards the inverter goes back to sleep.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_overheating_stops_the_inverter",
+     "name": "test_overheating_stops_the_inverter",
+     "title": "When the heat sink reaches 95 degrees the inverter stops and reports OVER_TEMP.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_trip_threshold_is_exactly_95_degrees[94.9-False]",
+     "name": "test_trip_threshold_is_exactly_95_degrees",
+     "title": "At 94.9 degrees the inverter keeps running; at 95.0 it stops.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_trip_threshold_is_exactly_95_degrees[95.0-True]",
+     "name": "test_trip_threshold_is_exactly_95_degrees",
+     "title": "At 94.9 degrees the inverter keeps running; at 95.0 it stops.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_restart_threshold_is_exactly_75_degrees[75.1-False]",
+     "name": "test_restart_threshold_is_exactly_75_degrees",
+     "title": "After a trip the inverter stays off at 75.1 degrees and starts again at 75.0.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_restart_threshold_is_exactly_75_degrees[75.0-True]",
+     "name": "test_restart_threshold_is_exactly_75_degrees",
+     "title": "After a trip the inverter stays off at 75.1 degrees and starts again at 75.0.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_hot_cabinet_makes_the_inverter_cycle_but_never_cook",
+     "name": "test_hot_cabinet_makes_the_inverter_cycle_but_never_cook",
+     "title": "In a 60-degree cabinet the inverter trips, cools, restarts and trips again; it never runs past 95 degrees.",
+     "suite": "test_grid_safety"
+    }
+   ],
+   "killer_count": 123,
+   "seconds": 33.2
+  },
+  {
+   "id": "M14",
+   "area": "map",
+   "file": "src/inverter_lab/inverter.py",
+   "title": "The current is reported ten times too high (wrong scale factor)",
+   "link": "memory",
+   "old": "(101, \"A_SF\"): -2,",
+   "new": "(101, \"A_SF\"): -1,",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_inverter_day.py::test_ac_power_equals_voltage_times_current",
+     "name": "test_ac_power_equals_voltage_times_current",
+     "title": "On the AC side the reported power equals voltage times current, within the rounding of the registers.",
+     "suite": "test_inverter_day"
+    }
+   ],
+   "killer_count": 1,
+   "seconds": 33.5
+  },
+  {
+   "id": "M15",
+   "area": "map",
+   "file": "src/inverter_lab/sunspec.py",
+   "title": "Temperatures below zero are read as huge positive numbers",
+   "link": "memory",
+   "old": "    if point.type in SIGNED and number >= 0x8000:\n        number -= 0x10000",
+   "new": "",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_grid_safety.py::test_grid_loss_stops_the_feed_in_within_a_second",
+     "name": "test_grid_loss_stops_the_feed_in_within_a_second",
+     "title": "When the grid disappears the inverter stops feeding in within one second, so nobody repairs a live line.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_grid_loss_is_reported_as_a_fault",
+     "name": "test_grid_loss_is_reported_as_a_fault",
+     "title": "During a grid outage the inverter reports FAULT with the event GRID_DISCONNECT, zero volts and zero hertz.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_inverter_waits_a_minute_after_the_grid_returns",
+     "name": "test_inverter_waits_a_minute_after_the_grid_returns",
+     "title": "After the grid returns the inverter waits a full 60 seconds before it feeds in again.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_even_a_one_second_dip_costs_the_full_minute",
+     "name": "test_even_a_one_second_dip_costs_the_full_minute",
+     "title": "A grid dip of a single second is treated like any outage: the full 60-second wait follows.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_fault_flag_clears_when_the_grid_is_back",
+     "name": "test_fault_flag_clears_when_the_grid_is_back",
+     "title": "The GRID_DISCONNECT event disappears as soon as the grid is back, while the inverter still waits.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_grid_loss_at_night_is_still_reported",
+     "name": "test_grid_loss_at_night_is_still_reported",
+     "title": "A grid outage at night is reported as a fault too, and afterwards the inverter goes back to sleep.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_overheating_stops_the_inverter",
+     "name": "test_overheating_stops_the_inverter",
+     "title": "When the heat sink reaches 95 degrees the inverter stops and reports OVER_TEMP.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_trip_threshold_is_exactly_95_degrees[94.9-False]",
+     "name": "test_trip_threshold_is_exactly_95_degrees",
+     "title": "At 94.9 degrees the inverter keeps running; at 95.0 it stops.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_trip_threshold_is_exactly_95_degrees[95.0-True]",
+     "name": "test_trip_threshold_is_exactly_95_degrees",
+     "title": "At 94.9 degrees the inverter keeps running; at 95.0 it stops.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_restart_threshold_is_exactly_75_degrees[75.1-False]",
+     "name": "test_restart_threshold_is_exactly_75_degrees",
+     "title": "After a trip the inverter stays off at 75.1 degrees and starts again at 75.0.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_restart_threshold_is_exactly_75_degrees[75.0-True]",
+     "name": "test_restart_threshold_is_exactly_75_degrees",
+     "title": "After a trip the inverter stays off at 75.1 degrees and starts again at 75.0.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_hot_cabinet_makes_the_inverter_cycle_but_never_cook",
+     "name": "test_hot_cabinet_makes_the_inverter_cycle_but_never_cook",
+     "title": "In a 60-degree cabinet the inverter trips, cools, restarts and trips again; it never runs past 95 degrees.",
+     "suite": "test_grid_safety"
+    }
+   ],
+   "killer_count": 86,
+   "seconds": 32.3
+  },
+  {
+   "id": "M16",
+   "area": "map",
+   "file": "src/inverter_lab/sunspec.py",
+   "title": "Values the inverter does not have read as zero instead of \"not implemented\"",
+   "link": "memory",
+   "old": "    \"uint16\": 0xFFFF,",
+   "new": "    \"uint16\": 0x0000,",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_grid_safety.py::test_grid_loss_stops_the_feed_in_within_a_second",
+     "name": "test_grid_loss_stops_the_feed_in_within_a_second",
+     "title": "When the grid disappears the inverter stops feeding in within one second, so nobody repairs a live line.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_grid_loss_is_reported_as_a_fault",
+     "name": "test_grid_loss_is_reported_as_a_fault",
+     "title": "During a grid outage the inverter reports FAULT with the event GRID_DISCONNECT, zero volts and zero hertz.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_inverter_day.py::test_at_night_the_inverter_sleeps",
+     "name": "test_at_night_the_inverter_sleeps",
+     "title": "At three in the morning the inverter sleeps: no power, no current, no array voltage.",
+     "suite": "test_inverter_day"
+    },
+    {
+     "id": "tests/test_inverter_day.py::test_ac_power_equals_voltage_times_current",
+     "name": "test_ac_power_equals_voltage_times_current",
+     "title": "On the AC side the reported power equals voltage times current, within the rounding of the registers.",
+     "suite": "test_inverter_day"
+    },
+    {
+     "id": "tests/test_inverter_day.py::test_dc_power_equals_voltage_times_current",
+     "name": "test_dc_power_equals_voltage_times_current",
+     "title": "On the DC side the reported power equals voltage times current, within the rounding of the registers.",
+     "suite": "test_inverter_day"
+    },
+    {
+     "id": "tests/test_inverter_day.py::test_array_voltage_tells_what_the_inverter_is_doing",
+     "name": "test_array_voltage_tells_what_the_inverter_is_doing",
+     "title": "The array reads 0 V in the dark, 440 V unloaded at dawn, 360 V at full use and more when power is clipped.",
+     "suite": "test_inverter_day"
+    },
+    {
+     "id": "tests/test_register_access.py::test_largest_allowed_values_are_accepted[WMaxLimPct-0]",
+     "name": "test_largest_allowed_values_are_accepted",
+     "title": "The largest value each control allows is accepted and reads back.",
+     "suite": "test_register_access"
+    },
+    {
+     "id": "tests/test_register_access.py::test_reset_returns_the_inverter_to_its_factory_state",
+     "name": "test_reset_returns_the_inverter_to_its_factory_state",
+     "title": "After a reset the clock, the weather, the controls and the energy counter are back at their defaults.",
+     "suite": "test_register_access"
+    },
+    {
+     "id": "tests/test_sunspec_codec.py::test_missing_values_use_the_not_implemented_pattern[uint16-pattern0]",
+     "name": "test_missing_values_use_the_not_implemented_pattern",
+     "title": "A value the device does not have is stored as the agreed pattern and is read back as \"no value\".",
+     "suite": "test_sunspec_codec"
+    }
+   ],
+   "killer_count": 9,
+   "seconds": 33.3
+  },
+  {
+   "id": "M17",
+   "area": "control",
+   "file": "src/inverter_lab/device.py",
+   "title": "Read-only registers no longer refuse writes cleanly",
+   "link": "memory",
+   "old": "            if entry is None or not entry.point.writable:",
+   "new": "            if entry is None:",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_register_access.py::test_measurements_cannot_be_overwritten[101-W]",
+     "name": "test_measurements_cannot_be_overwritten",
+     "title": "Measurements, ratings and identity are read-only: a write is refused with exception 02.",
+     "suite": "test_register_access"
+    },
+    {
+     "id": "tests/test_register_access.py::test_measurements_cannot_be_overwritten[101-WH]",
+     "name": "test_measurements_cannot_be_overwritten",
+     "title": "Measurements, ratings and identity are read-only: a write is refused with exception 02.",
+     "suite": "test_register_access"
+    },
+    {
+     "id": "tests/test_register_access.py::test_measurements_cannot_be_overwritten[101-St]",
+     "name": "test_measurements_cannot_be_overwritten",
+     "title": "Measurements, ratings and identity are read-only: a write is refused with exception 02.",
+     "suite": "test_register_access"
+    },
+    {
+     "id": "tests/test_register_access.py::test_measurements_cannot_be_overwritten[101-Evt1]",
+     "name": "test_measurements_cannot_be_overwritten",
+     "title": "Measurements, ratings and identity are read-only: a write is refused with exception 02.",
+     "suite": "test_register_access"
+    },
+    {
+     "id": "tests/test_register_access.py::test_measurements_cannot_be_overwritten[1-Mn]",
+     "name": "test_measurements_cannot_be_overwritten",
+     "title": "Measurements, ratings and identity are read-only: a write is refused with exception 02.",
+     "suite": "test_register_access"
+    },
+    {
+     "id": "tests/test_register_access.py::test_measurements_cannot_be_overwritten[1-DA]",
+     "name": "test_measurements_cannot_be_overwritten",
+     "title": "Measurements, ratings and identity are read-only: a write is refused with exception 02.",
+     "suite": "test_register_access"
+    },
+    {
+     "id": "tests/test_register_access.py::test_measurements_cannot_be_overwritten[120-WRtg]",
+     "name": "test_measurements_cannot_be_overwritten",
+     "title": "Measurements, ratings and identity are read-only: a write is refused with exception 02.",
+     "suite": "test_register_access"
+    },
+    {
+     "id": "tests/test_register_access.py::test_measurements_cannot_be_overwritten[123-WMaxLimPct_SF]",
+     "name": "test_measurements_cannot_be_overwritten",
+     "title": "Measurements, ratings and identity are read-only: a write is refused with exception 02.",
+     "suite": "test_register_access"
+    },
+    {
+     "id": "tests/test_register_access.py::test_write_reaching_into_a_read_only_register_changes_nothing",
+     "name": "test_write_reaching_into_a_read_only_register_changes_nothing",
+     "title": "A write that covers five writable registers and one read-only register is refused as a whole.",
+     "suite": "test_register_access"
+    },
+    {
+     "id": "tests/test_robustness.py::test_every_write_is_confirmed_or_refused_and_the_map_stays_whole",
+     "name": "test_every_write_is_confirmed_or_refused_and_the_map_stays_whole",
+     "title": "Any write is either confirmed or refused with a reason, and afterwards the map still has its skeleton.",
+     "suite": "test_robustness"
+    }
+   ],
+   "killer_count": 10,
+   "seconds": 33.5
+  },
+  {
+   "id": "M18",
+   "area": "control",
+   "file": "src/inverter_lab/device.py",
+   "title": "A refused command is carried out anyway before it is refused",
+   "link": "memory",
+   "old": "        for name, value in changes.items():\n            low, high = CONTROL_RANGES[name]\n            if not low <= value <= high:\n                raise IllegalValue(name)\n        self.inverter.write_controls(changes)",
+   "new": "        self.inverter.write_controls(changes)\n        for name, value in changes.items():\n            low, high = CONTROL_RANGES[name]\n            if not low <= value <= high:\n                raise IllegalValue(name)",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_register_access.py::test_limit_above_100_percent_is_refused[101]",
+     "name": "test_limit_above_100_percent_is_refused",
+     "title": "A power limit above 100 % is refused with exception 03 and the previous limit stays.",
+     "suite": "test_register_access"
+    },
+    {
+     "id": "tests/test_register_access.py::test_limit_above_100_percent_is_refused[150]",
+     "name": "test_limit_above_100_percent_is_refused",
+     "title": "A power limit above 100 % is refused with exception 03 and the previous limit stays.",
+     "suite": "test_register_access"
+    },
+    {
+     "id": "tests/test_register_access.py::test_limit_above_100_percent_is_refused[1000]",
+     "name": "test_limit_above_100_percent_is_refused",
+     "title": "A power limit above 100 % is refused with exception 03 and the previous limit stays.",
+     "suite": "test_register_access"
+    },
+    {
+     "id": "tests/test_register_access.py::test_limit_above_100_percent_is_refused[65535]",
+     "name": "test_limit_above_100_percent_is_refused",
+     "title": "A power limit above 100 % is refused with exception 03 and the previous limit stays.",
+     "suite": "test_register_access"
+    },
+    {
+     "id": "tests/test_register_access.py::test_values_the_inverter_cannot_honour_are_refused[Conn-2]",
+     "name": "test_values_the_inverter_cannot_honour_are_refused",
+     "title": "A switch set to anything but 0 or 1, an unsupported feature or a too-long timer is refused with exception 03.",
+     "suite": "test_register_access"
+    },
+    {
+     "id": "tests/test_register_access.py::test_values_the_inverter_cannot_honour_are_refused[Conn-65535]",
+     "name": "test_values_the_inverter_cannot_honour_are_refused",
+     "title": "A switch set to anything but 0 or 1, an unsupported feature or a too-long timer is refused with exception 03.",
+     "suite": "test_register_access"
+    },
+    {
+     "id": "tests/test_register_access.py::test_values_the_inverter_cannot_honour_are_refused[Conn_RvrtTms-3601]",
+     "name": "test_values_the_inverter_cannot_honour_are_refused",
+     "title": "A switch set to anything but 0 or 1, an unsupported feature or a too-long timer is refused with exception 03.",
+     "suite": "test_register_access"
+    },
+    {
+     "id": "tests/test_register_access.py::test_values_the_inverter_cannot_honour_are_refused[WMaxLimPct_RvrtTms-3601]",
+     "name": "test_values_the_inverter_cannot_honour_are_refused",
+     "title": "A switch set to anything but 0 or 1, an unsupported feature or a too-long timer is refused with exception 03.",
+     "suite": "test_register_access"
+    },
+    {
+     "id": "tests/test_register_access.py::test_values_the_inverter_cannot_honour_are_refused[WMaxLimPct_RmpTms-601]",
+     "name": "test_values_the_inverter_cannot_honour_are_refused",
+     "title": "A switch set to anything but 0 or 1, an unsupported feature or a too-long timer is refused with exception 03.",
+     "suite": "test_register_access"
+    },
+    {
+     "id": "tests/test_register_access.py::test_write_with_one_bad_value_changes_nothing",
+     "name": "test_write_with_one_bad_value_changes_nothing",
+     "title": "A five-register write whose last value is invalid is refused as a whole: no register changes.",
+     "suite": "test_register_access"
+    }
+   ],
+   "killer_count": 10,
+   "seconds": 33.3
+  },
+  {
+   "id": "M19",
+   "area": "control",
+   "file": "src/inverter_lab/device.py",
+   "title": "A reset is carried out without its key",
+   "link": "memory",
+   "old": "            SIM_RESET: lambda v: v == SIM_RESET_KEY,",
+   "new": "            SIM_RESET: lambda v: True,",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_register_access.py::test_test_bench_block_refuses_impossible_settings[reset-without-key]",
+     "name": "test_test_bench_block_refuses_impossible_settings",
+     "title": "The simulator's own control block refuses settings outside its ranges with exception 03.",
+     "suite": "test_register_access"
+    },
+    {
+     "id": "tests/test_register_access.py::test_reset_needs_its_key",
+     "name": "test_reset_needs_its_key",
+     "title": "A reset happens only with the key 0xC0DE; any other value is refused and nothing is reset.",
+     "suite": "test_register_access"
+    }
+   ],
+   "killer_count": 2,
+   "seconds": 33.0
+  },
+  {
+   "id": "M20",
+   "area": "sun",
+   "file": "src/inverter_lab/inverter.py",
+   "title": "At full sun the inverter reports a power limit that nobody set",
+   "link": "memory",
+   "old": "            unconstrained = RATED_W  # clipping at the nameplate",
+   "new": "            pass",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_grid_safety.py::test_grid_loss_stops_the_feed_in_within_a_second",
+     "name": "test_grid_loss_stops_the_feed_in_within_a_second",
+     "title": "When the grid disappears the inverter stops feeding in within one second, so nobody repairs a live line.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_grid_loss_is_reported_as_a_fault",
+     "name": "test_grid_loss_is_reported_as_a_fault",
+     "title": "During a grid outage the inverter reports FAULT with the event GRID_DISCONNECT, zero volts and zero hertz.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_inverter_waits_a_minute_after_the_grid_returns",
+     "name": "test_inverter_waits_a_minute_after_the_grid_returns",
+     "title": "After the grid returns the inverter waits a full 60 seconds before it feeds in again.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_even_a_one_second_dip_costs_the_full_minute",
+     "name": "test_even_a_one_second_dip_costs_the_full_minute",
+     "title": "A grid dip of a single second is treated like any outage: the full 60-second wait follows.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_fault_flag_clears_when_the_grid_is_back",
+     "name": "test_fault_flag_clears_when_the_grid_is_back",
+     "title": "The GRID_DISCONNECT event disappears as soon as the grid is back, while the inverter still waits.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_overheating_stops_the_inverter",
+     "name": "test_overheating_stops_the_inverter",
+     "title": "When the heat sink reaches 95 degrees the inverter stops and reports OVER_TEMP.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_trip_threshold_is_exactly_95_degrees[94.9-False]",
+     "name": "test_trip_threshold_is_exactly_95_degrees",
+     "title": "At 94.9 degrees the inverter keeps running; at 95.0 it stops.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_trip_threshold_is_exactly_95_degrees[95.0-True]",
+     "name": "test_trip_threshold_is_exactly_95_degrees",
+     "title": "At 94.9 degrees the inverter keeps running; at 95.0 it stops.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_restart_threshold_is_exactly_75_degrees[75.1-False]",
+     "name": "test_restart_threshold_is_exactly_75_degrees",
+     "title": "After a trip the inverter stays off at 75.1 degrees and starts again at 75.0.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_restart_threshold_is_exactly_75_degrees[75.0-True]",
+     "name": "test_restart_threshold_is_exactly_75_degrees",
+     "title": "After a trip the inverter stays off at 75.1 degrees and starts again at 75.0.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_hot_cabinet_makes_the_inverter_cycle_but_never_cook",
+     "name": "test_hot_cabinet_makes_the_inverter_cycle_but_never_cook",
+     "title": "In a 60-degree cabinet the inverter trips, cools, restarts and trips again; it never runs past 95 degrees.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_two_faults_at_once_show_both_events",
+     "name": "test_two_faults_at_once_show_both_events",
+     "title": "With the grid down and the heat sink too hot, both events are reported at the same time.",
+     "suite": "test_grid_safety"
+    }
+   ],
+   "killer_count": 16,
+   "seconds": 33.2
+  },
+  {
+   "id": "M21",
+   "area": "safety",
+   "file": "src/inverter_lab/inverter.py",
+   "title": "The inverter keeps feeding in when the grid is down",
+   "link": "memory",
+   "old": "        if not self.grid_ok:\n            events |= EVT_GRID_DISCONNECT",
+   "new": "        if False:\n            events |= EVT_GRID_DISCONNECT",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_grid_safety.py::test_grid_loss_stops_the_feed_in_within_a_second",
+     "name": "test_grid_loss_stops_the_feed_in_within_a_second",
+     "title": "When the grid disappears the inverter stops feeding in within one second, so nobody repairs a live line.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_grid_loss_is_reported_as_a_fault",
+     "name": "test_grid_loss_is_reported_as_a_fault",
+     "title": "During a grid outage the inverter reports FAULT with the event GRID_DISCONNECT, zero volts and zero hertz.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_inverter_waits_a_minute_after_the_grid_returns",
+     "name": "test_inverter_waits_a_minute_after_the_grid_returns",
+     "title": "After the grid returns the inverter waits a full 60 seconds before it feeds in again.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_even_a_one_second_dip_costs_the_full_minute",
+     "name": "test_even_a_one_second_dip_costs_the_full_minute",
+     "title": "A grid dip of a single second is treated like any outage: the full 60-second wait follows.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_fault_flag_clears_when_the_grid_is_back",
+     "name": "test_fault_flag_clears_when_the_grid_is_back",
+     "title": "The GRID_DISCONNECT event disappears as soon as the grid is back, while the inverter still waits.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_grid_loss_at_night_is_still_reported",
+     "name": "test_grid_loss_at_night_is_still_reported",
+     "title": "A grid outage at night is reported as a fault too, and afterwards the inverter goes back to sleep.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_two_faults_at_once_show_both_events",
+     "name": "test_two_faults_at_once_show_both_events",
+     "title": "With the grid down and the heat sink too hot, both events are reported at the same time.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_energy_counter_stands_still_during_a_fault",
+     "name": "test_energy_counter_stands_still_during_a_fault",
+     "title": "While a fault keeps the inverter off, the energy counter does not move.",
+     "suite": "test_grid_safety"
+    }
+   ],
+   "killer_count": 8,
+   "seconds": 33.1
+  },
+  {
+   "id": "M22",
+   "area": "safety",
+   "file": "src/inverter_lab/inverter.py",
+   "title": "After an outage the inverter reconnects after 6 seconds instead of 60",
+   "link": "memory",
+   "old": "RECONNECT_S = 60  # wait after the grid returns",
+   "new": "RECONNECT_S = 6  # wait after the grid returns",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_grid_safety.py::test_inverter_waits_a_minute_after_the_grid_returns",
+     "name": "test_inverter_waits_a_minute_after_the_grid_returns",
+     "title": "After the grid returns the inverter waits a full 60 seconds before it feeds in again.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_grid_safety.py::test_even_a_one_second_dip_costs_the_full_minute",
+     "name": "test_even_a_one_second_dip_costs_the_full_minute",
+     "title": "A grid dip of a single second is treated like any outage: the full 60-second wait follows.",
+     "suite": "test_grid_safety"
+    }
+   ],
+   "killer_count": 2,
+   "seconds": 32.8
+  },
+  {
+   "id": "M23",
+   "area": "control",
+   "file": "src/inverter_lab/inverter.py",
+   "title": "The inverter ignores the power limit",
+   "link": "memory",
+   "old": "        target = limit_w if limit_w < unconstrained else unconstrained",
+   "new": "        target = unconstrained",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_power_limit.py::test_limit_of_50_percent_halves_the_output",
+     "name": "test_limit_of_50_percent_halves_the_output",
+     "title": "Told to limit itself to 50 %, the inverter delivers 2500 W and reports that it is throttled.",
+     "suite": "test_power_limit"
+    },
+    {
+     "id": "tests/test_power_limit.py::test_limit_sets_the_output_to_that_share_of_the_rating[0]",
+     "name": "test_limit_sets_the_output_to_that_share_of_the_rating",
+     "title": "Any limit from 0 to 100 % gives exactly that share of the rated 5000 W.",
+     "suite": "test_power_limit"
+    },
+    {
+     "id": "tests/test_power_limit.py::test_limit_sets_the_output_to_that_share_of_the_rating[1]",
+     "name": "test_limit_sets_the_output_to_that_share_of_the_rating",
+     "title": "Any limit from 0 to 100 % gives exactly that share of the rated 5000 W.",
+     "suite": "test_power_limit"
+    },
+    {
+     "id": "tests/test_power_limit.py::test_limit_sets_the_output_to_that_share_of_the_rating[10]",
+     "name": "test_limit_sets_the_output_to_that_share_of_the_rating",
+     "title": "Any limit from 0 to 100 % gives exactly that share of the rated 5000 W.",
+     "suite": "test_power_limit"
+    },
+    {
+     "id": "tests/test_power_limit.py::test_limit_sets_the_output_to_that_share_of_the_rating[25]",
+     "name": "test_limit_sets_the_output_to_that_share_of_the_rating",
+     "title": "Any limit from 0 to 100 % gives exactly that share of the rated 5000 W.",
+     "suite": "test_power_limit"
+    },
+    {
+     "id": "tests/test_power_limit.py::test_limit_sets_the_output_to_that_share_of_the_rating[50]",
+     "name": "test_limit_sets_the_output_to_that_share_of_the_rating",
+     "title": "Any limit from 0 to 100 % gives exactly that share of the rated 5000 W.",
+     "suite": "test_power_limit"
+    },
+    {
+     "id": "tests/test_power_limit.py::test_limit_sets_the_output_to_that_share_of_the_rating[75]",
+     "name": "test_limit_sets_the_output_to_that_share_of_the_rating",
+     "title": "Any limit from 0 to 100 % gives exactly that share of the rated 5000 W.",
+     "suite": "test_power_limit"
+    },
+    {
+     "id": "tests/test_power_limit.py::test_limit_sets_the_output_to_that_share_of_the_rating[99]",
+     "name": "test_limit_sets_the_output_to_that_share_of_the_rating",
+     "title": "Any limit from 0 to 100 % gives exactly that share of the rated 5000 W.",
+     "suite": "test_power_limit"
+    },
+    {
+     "id": "tests/test_power_limit.py::test_removing_the_limit_brings_the_power_back_gently",
+     "name": "test_removing_the_limit_brings_the_power_back_gently",
+     "title": "When the limit is removed the power returns at 1 kW per second, not in one jump.",
+     "suite": "test_power_limit"
+    },
+    {
+     "id": "tests/test_power_limit.py::test_ramp_time_spreads_the_change_evenly",
+     "name": "test_ramp_time_spreads_the_change_evenly",
+     "title": "With a ramp time of 10 s the output falls from 100 % to 50 % in ten equal steps of 250 W.",
+     "suite": "test_power_limit"
+    },
+    {
+     "id": "tests/test_power_limit.py::test_ramp_also_applies_on_the_way_up",
+     "name": "test_ramp_also_applies_on_the_way_up",
+     "title": "Raising the limit from 20 % to 60 % with a ramp time of 4 s takes four equal steps of 500 W.",
+     "suite": "test_power_limit"
+    },
+    {
+     "id": "tests/test_power_limit.py::test_limit_is_dropped_when_the_controller_goes_quiet",
+     "name": "test_limit_is_dropped_when_the_controller_goes_quiet",
+     "title": "A limit with a 30-second revert timeout is dropped by the inverter itself if nobody renews it.",
+     "suite": "test_power_limit"
+    }
+   ],
+   "killer_count": 18,
+   "seconds": 32.9
+  },
+  {
+   "id": "M24",
+   "area": "control",
+   "file": "src/inverter_lab/inverter.py",
+   "title": "A limit that nobody renews stays in force for ever",
+   "link": "memory",
+   "old": "            if self.limit_age >= self.limit_rvrt_s:",
+   "new": "            if False:",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_power_limit.py::test_limit_is_dropped_when_the_controller_goes_quiet",
+     "name": "test_limit_is_dropped_when_the_controller_goes_quiet",
+     "title": "A limit with a 30-second revert timeout is dropped by the inverter itself if nobody renews it.",
+     "suite": "test_power_limit"
+    },
+    {
+     "id": "tests/test_power_limit.py::test_renewing_the_limit_restarts_its_timer",
+     "name": "test_renewing_the_limit_restarts_its_timer",
+     "title": "Writing the limit again before the timeout keeps it alive for another full period.",
+     "suite": "test_power_limit"
+    }
+   ],
+   "killer_count": 2,
+   "seconds": 32.7
+  },
+  {
+   "id": "M25",
+   "area": "control",
+   "file": "src/inverter_lab/inverter.py",
+   "title": "Renewing a limit does not restart its timer",
+   "link": "memory",
+   "old": "            self.limit_age = 0  # every write of the limit restarts the revert timer",
+   "new": "",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_power_limit.py::test_renewing_the_limit_restarts_its_timer",
+     "name": "test_renewing_the_limit_restarts_its_timer",
+     "title": "Writing the limit again before the timeout keeps it alive for another full period.",
+     "suite": "test_power_limit"
+    }
+   ],
+   "killer_count": 1,
+   "seconds": 32.9
+  },
+  {
+   "id": "M26",
+   "area": "safety",
+   "file": "src/inverter_lab/inverter.py",
+   "title": "The over-temperature trip is off by a hair: 95.0 degrees does not trip",
+   "link": "memory",
+   "old": "        if self.sink_c >= TRIP_C:",
+   "new": "        if self.sink_c > TRIP_C:",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_grid_safety.py::test_trip_threshold_is_exactly_95_degrees[95.0-True]",
+     "name": "test_trip_threshold_is_exactly_95_degrees",
+     "title": "At 94.9 degrees the inverter keeps running; at 95.0 it stops.",
+     "suite": "test_grid_safety"
+    }
+   ],
+   "killer_count": 1,
+   "seconds": 32.7
+  },
+  {
+   "id": "M27",
+   "area": "safety",
+   "file": "src/inverter_lab/inverter.py",
+   "title": "After overheating the inverter restarts while it is still hot",
+   "link": "memory",
+   "old": "        elif self.sink_c <= RESET_C:",
+   "new": "        else:",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_grid_safety.py::test_restart_threshold_is_exactly_75_degrees[75.1-False]",
+     "name": "test_restart_threshold_is_exactly_75_degrees",
+     "title": "After a trip the inverter stays off at 75.1 degrees and starts again at 75.0.",
+     "suite": "test_grid_safety"
+    }
+   ],
+   "killer_count": 1,
+   "seconds": 32.4
+  },
+  {
+   "id": "M28",
+   "area": "sun",
+   "file": "src/inverter_lab/inverter.py",
+   "title": "The energy counter counts the power before losses: 3 % too much",
+   "link": "memory",
+   "old": "        self.energy_wh += self.ac_w / 3600.0",
+   "new": "        self.energy_wh += self.dc_w / 3600.0",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_inverter_day.py::test_energy_counter_adds_up_the_power",
+     "name": "test_energy_counter_adds_up_the_power",
+     "title": "One hour at a steady 5000 W adds exactly 5000 Wh to the energy counter.",
+     "suite": "test_inverter_day"
+    },
+    {
+     "id": "tests/test_inverter_day.py::test_energy_counter_never_goes_down",
+     "name": "test_energy_counter_never_goes_down",
+     "title": "Over a whole day the energy counter only grows, and a clear June day yields about 45 kWh.",
+     "suite": "test_inverter_day"
+    }
+   ],
+   "killer_count": 2,
+   "seconds": 32.8
+  },
+  {
+   "id": "M29",
+   "area": "sun",
+   "file": "src/inverter_lab/inverter.py",
+   "title": "Conversion losses are understated by one percent",
+   "link": "memory",
+   "old": "EFFICIENCY = 0.975",
+   "new": "EFFICIENCY = 0.985",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_inverter_day.py::test_power_follows_the_datasheet_curve[06:00]",
+     "name": "test_power_follows_the_datasheet_curve",
+     "title": "At any hour of a clear day the power is what the datasheet formula gives, to the watt.",
+     "suite": "test_inverter_day"
+    },
+    {
+     "id": "tests/test_inverter_day.py::test_power_follows_the_datasheet_curve[08:00]",
+     "name": "test_power_follows_the_datasheet_curve",
+     "title": "At any hour of a clear day the power is what the datasheet formula gives, to the watt.",
+     "suite": "test_inverter_day"
+    },
+    {
+     "id": "tests/test_inverter_day.py::test_power_follows_the_datasheet_curve[10:00]",
+     "name": "test_power_follows_the_datasheet_curve",
+     "title": "At any hour of a clear day the power is what the datasheet formula gives, to the watt.",
+     "suite": "test_inverter_day"
+    },
+    {
+     "id": "tests/test_inverter_day.py::test_power_follows_the_datasheet_curve[17:00]",
+     "name": "test_power_follows_the_datasheet_curve",
+     "title": "At any hour of a clear day the power is what the datasheet formula gives, to the watt.",
+     "suite": "test_inverter_day"
+    },
+    {
+     "id": "tests/test_inverter_day.py::test_power_follows_the_datasheet_curve[19:00]",
+     "name": "test_power_follows_the_datasheet_curve",
+     "title": "At any hour of a clear day the power is what the datasheet formula gives, to the watt.",
+     "suite": "test_inverter_day"
+    },
+    {
+     "id": "tests/test_inverter_day.py::test_clouds_reduce_the_power",
+     "name": "test_clouds_reduce_the_power",
+     "title": "More cloud means less power, and a fully overcast noon still gives what a quarter of the light can.",
+     "suite": "test_inverter_day"
+    },
+    {
+     "id": "tests/test_inverter_day.py::test_power_falls_at_once_and_rises_gently",
+     "name": "test_power_falls_at_once_and_rises_gently",
+     "title": "When a cloud arrives the power drops within a second; when it leaves, power returns at 1 kW per second.",
+     "suite": "test_inverter_day"
+    },
+    {
+     "id": "tests/test_inverter_day.py::test_ac_power_is_always_below_dc_power",
+     "name": "test_ac_power_is_always_below_dc_power",
+     "title": "All day the inverter gives out less than it takes in: at least 20 W and 2.5 % are lost as heat.",
+     "suite": "test_inverter_day"
+    },
+    {
+     "id": "tests/test_inverter_day.py::test_next_morning_it_starts_again",
+     "name": "test_next_morning_it_starts_again",
+     "title": "After a night asleep the inverter wakes up by itself the next morning.",
+     "suite": "test_inverter_day"
+    },
+    {
+     "id": "tests/test_power_limit.py::test_limit_above_what_the_sun_delivers_changes_nothing",
+     "name": "test_limit_above_what_the_sun_delivers_changes_nothing",
+     "title": "Under thick cloud a 50 % limit is higher than what the sun delivers, so the inverter is not throttled.",
+     "suite": "test_power_limit"
+    },
+    {
+     "id": "tests/test_power_limit.py::test_throttled_inverter_lets_the_array_voltage_rise",
+     "name": "test_throttled_inverter_lets_the_array_voltage_rise",
+     "title": "When throttled the inverter takes less from the array, so the array voltage rises above 360 V.",
+     "suite": "test_power_limit"
+    }
+   ],
+   "killer_count": 11,
+   "seconds": 33.1
+  },
+  {
+   "id": "M30",
+   "area": "sun",
+   "file": "src/inverter_lab/inverter.py",
+   "title": "No soft start: the power jumps to full in one step",
+   "link": "memory",
+   "old": "            self.ac_w += RAMP_W_PER_S  # power rises gently and falls at once",
+   "new": "            self.ac_w = target",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_grid_safety.py::test_inverter_waits_a_minute_after_the_grid_returns",
+     "name": "test_inverter_waits_a_minute_after_the_grid_returns",
+     "title": "After the grid returns the inverter waits a full 60 seconds before it feeds in again.",
+     "suite": "test_grid_safety"
+    },
+    {
+     "id": "tests/test_inverter_day.py::test_power_falls_at_once_and_rises_gently",
+     "name": "test_power_falls_at_once_and_rises_gently",
+     "title": "When a cloud arrives the power drops within a second; when it leaves, power returns at 1 kW per second.",
+     "suite": "test_inverter_day"
+    },
+    {
+     "id": "tests/test_inverter_day.py::test_soft_start_adds_one_kilowatt_per_second",
+     "name": "test_soft_start_adds_one_kilowatt_per_second",
+     "title": "After start-up the power climbs by 1 kW each second until it reaches what the sun delivers.",
+     "suite": "test_inverter_day"
+    },
+    {
+     "id": "tests/test_power_limit.py::test_removing_the_limit_brings_the_power_back_gently",
+     "name": "test_removing_the_limit_brings_the_power_back_gently",
+     "title": "When the limit is removed the power returns at 1 kW per second, not in one jump.",
+     "suite": "test_power_limit"
+    },
+    {
+     "id": "tests/test_power_limit.py::test_limit_is_dropped_when_the_controller_goes_quiet",
+     "name": "test_limit_is_dropped_when_the_controller_goes_quiet",
+     "title": "A limit with a 30-second revert timeout is dropped by the inverter itself if nobody renews it.",
+     "suite": "test_power_limit"
+    },
+    {
+     "id": "tests/test_power_limit.py::test_reconnect_command_goes_through_the_grid_checks",
+     "name": "test_reconnect_command_goes_through_the_grid_checks",
+     "title": "Told to connect again, the inverter first checks the grid for 20 s and then starts softly.",
+     "suite": "test_power_limit"
+    }
+   ],
+   "killer_count": 6,
+   "seconds": 32.9
+  },
+  {
+   "id": "M31",
+   "area": "safety",
+   "file": "src/inverter_lab/inverter.py",
+   "title": "The inverter skips the grid checks before it starts",
+   "link": "memory",
+   "old": "STARTUP_S = 20  # grid checks before feeding in",
+   "new": "STARTUP_S = 0  # grid checks before feeding in",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_inverter_day.py::test_start_up_takes_twenty_seconds_of_grid_checks",
+     "name": "test_start_up_takes_twenty_seconds_of_grid_checks",
+     "title": "At dawn the inverter first checks the grid for 20 seconds with zero output, then starts feeding in.",
+     "suite": "test_inverter_day"
+    },
+    {
+     "id": "tests/test_inverter_day.py::test_soft_start_adds_one_kilowatt_per_second",
+     "name": "test_soft_start_adds_one_kilowatt_per_second",
+     "title": "After start-up the power climbs by 1 kW each second until it reaches what the sun delivers.",
+     "suite": "test_inverter_day"
+    },
+    {
+     "id": "tests/test_power_limit.py::test_reconnect_command_goes_through_the_grid_checks",
+     "name": "test_reconnect_command_goes_through_the_grid_checks",
+     "title": "Told to connect again, the inverter first checks the grid for 20 s and then starts softly.",
+     "suite": "test_power_limit"
+    }
+   ],
+   "killer_count": 3,
+   "seconds": 32.9
+  },
+  {
+   "id": "M32",
+   "area": "control",
+   "file": "src/inverter_lab/inverter.py",
+   "title": "The inverter ignores the disconnect command",
+   "link": "memory",
+   "old": "        elif not self.conn:",
+   "new": "        elif False:",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_power_limit.py::test_disconnect_command_stops_the_feed_in",
+     "name": "test_disconnect_command_stops_the_feed_in",
+     "title": "Told to disconnect, the inverter stops within a second and reports STANDBY, without any fault.",
+     "suite": "test_power_limit"
+    },
+    {
+     "id": "tests/test_power_limit.py::test_reconnect_command_goes_through_the_grid_checks",
+     "name": "test_reconnect_command_goes_through_the_grid_checks",
+     "title": "Told to connect again, the inverter first checks the grid for 20 s and then starts softly.",
+     "suite": "test_power_limit"
+    }
+   ],
+   "killer_count": 2,
+   "seconds": 32.6
+  },
+  {
+   "id": "M33",
+   "area": "sun",
+   "file": "src/inverter_lab/inverter.py",
+   "title": "The inverter gives up too early in weak evening light",
+   "link": "memory",
+   "old": "STOP_W = 30.0  # below this the inverter goes back to sleep",
+   "new": "STOP_W = 60.0  # below this the inverter goes back to sleep",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_inverter_day.py::test_evening_shutdown_happens_once",
+     "name": "test_evening_shutdown_happens_once",
+     "title": "At dusk the inverter goes to sleep once and stays asleep: it does not flicker on and off.",
+     "suite": "test_inverter_day"
+    },
+    {
+     "id": "tests/test_inverter_day.py::test_weak_light_keeps_a_running_inverter_on_and_a_sleeping_one_asleep",
+     "name": "test_weak_light_keeps_a_running_inverter_on_and_a_sleeping_one_asleep",
+     "title": "In the weak light of 21:21 an inverter that was running keeps running and one that slept stays asleep.",
+     "suite": "test_inverter_day"
+    }
+   ],
+   "killer_count": 2,
+   "seconds": 32.9
+  },
+  {
+   "id": "M34",
+   "area": "sun",
+   "file": "src/inverter_lab/inverter.py",
+   "title": "The clock runs past midnight and the next morning never comes",
+   "link": "memory",
+   "old": "        self.clock = (self.clock + 1) % DAY_S",
+   "new": "        self.clock = self.clock + 1",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_inverter_day.py::test_next_morning_it_starts_again",
+     "name": "test_next_morning_it_starts_again",
+     "title": "After a night asleep the inverter wakes up by itself the next morning.",
+     "suite": "test_inverter_day"
+    },
+    {
+     "id": "tests/test_inverter_day.py::test_clock_wraps_at_midnight",
+     "name": "test_clock_wraps_at_midnight",
+     "title": "Two minutes after 23:59 the clock reads 00:01.",
+     "suite": "test_inverter_day"
+    },
+    {
+     "id": "tests/test_power_limit.py::test_limit_survives_the_night",
+     "name": "test_limit_survives_the_night",
+     "title": "A limit without a timeout is still in force the next day.",
+     "suite": "test_power_limit"
+    }
+   ],
+   "killer_count": 3,
+   "seconds": 33.0
+  },
+  {
+   "id": "M35",
+   "area": "sun",
+   "file": "src/inverter_lab/inverter.py",
+   "title": "Clouds dim the light less than the datasheet says",
+   "link": "memory",
+   "old": "CLOUD_LOSS = 0.75",
+   "new": "CLOUD_LOSS = 0.50",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_inverter_day.py::test_clouds_reduce_the_power",
+     "name": "test_clouds_reduce_the_power",
+     "title": "More cloud means less power, and a fully overcast noon still gives what a quarter of the light can.",
+     "suite": "test_inverter_day"
+    },
+    {
+     "id": "tests/test_inverter_day.py::test_power_falls_at_once_and_rises_gently",
+     "name": "test_power_falls_at_once_and_rises_gently",
+     "title": "When a cloud arrives the power drops within a second; when it leaves, power returns at 1 kW per second.",
+     "suite": "test_inverter_day"
+    },
+    {
+     "id": "tests/test_power_limit.py::test_limit_above_what_the_sun_delivers_changes_nothing",
+     "name": "test_limit_above_what_the_sun_delivers_changes_nothing",
+     "title": "Under thick cloud a 50 % limit is higher than what the sun delivers, so the inverter is not throttled.",
+     "suite": "test_power_limit"
+    },
+    {
+     "id": "tests/test_power_limit.py::test_limit_holds_while_a_cloud_passes",
+     "name": "test_limit_holds_while_a_cloud_passes",
+     "title": "After a cloud passes, the power climbs back to the limit and stops there.",
+     "suite": "test_power_limit"
+    }
+   ],
+   "killer_count": 4,
+   "seconds": 32.5
+  },
+  {
+   "id": "M36",
+   "area": "client",
+   "file": "src/inverter_lab/rtu.py",
+   "title": "The client stops checking the checksum of answers",
+   "link": "memory",
+   "old": "    if not crc_ok(frame):\n        raise FrameError(f\"wrong CRC: {frame.hex(' ')}\")",
+   "new": "",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_client_noise.py::test_client_never_hands_out_a_damaged_value[1-bit-in-400]",
+     "name": "test_client_never_hands_out_a_damaged_value",
+     "title": "With one bit in 400 flipped on the line, 300 readings give the true values or an error, never a wrong value.",
+     "suite": "test_client_noise"
+    },
+    {
+     "id": "tests/test_client_noise.py::test_retries_get_the_true_value_through_a_bad_line[1-bit-in-2000-with-retries]",
+     "name": "test_retries_get_the_true_value_through_a_bad_line",
+     "title": "With retries allowed, 200 readings over a noisy line all end with the true values.",
+     "suite": "test_client_noise"
+    },
+    {
+     "id": "tests/test_client_noise.py::test_answer_with_a_wrong_checksum_is_rejected",
+     "name": "test_answer_with_a_wrong_checksum_is_rejected",
+     "title": "An answer whose checksum does not fit is rejected.",
+     "suite": "test_client_noise"
+    },
+    {
+     "id": "tests/test_client_noise.py::test_damaged_answer_is_asked_again",
+     "name": "test_damaged_answer_is_asked_again",
+     "title": "After a damaged answer the client repeats the request and takes the good answer.",
+     "suite": "test_client_noise"
+    },
+    {
+     "id": "tests/test_frames.py::test_rtu_rejects_a_wrong_checksum",
+     "name": "test_rtu_rejects_a_wrong_checksum",
+     "title": "A serial frame whose checksum does not fit is refused.",
+     "suite": "test_frames"
+    }
+   ],
+   "killer_count": 5,
+   "seconds": 22.0
+  },
+  {
+   "id": "M37",
+   "area": "client",
+   "file": "src/inverter_lab/client.py",
+   "title": "The client repeats a request the device has already refused",
+   "link": "memory",
+   "old": "            except (NoResponse, BadResponse) as exc:\n                failure = exc",
+   "new": "            except (NoResponse, BadResponse, pdu.ModbusException) as exc:\n                failure = exc",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_client_noise.py::test_refusal_is_not_asked_again",
+     "name": "test_refusal_is_not_asked_again",
+     "title": "A refusal from the device is final: the client reports it and does not repeat the request.",
+     "suite": "test_client_noise"
+    }
+   ],
+   "killer_count": 1,
+   "seconds": 32.0
+  },
+  {
+   "id": "M38",
+   "area": "client",
+   "file": "src/inverter_lab/client.py",
+   "title": "The client accepts an answer from another device",
+   "link": "memory",
+   "old": "        if unit != self.unit:\n            raise BadResponse(f\"answer from unit {unit}, asked unit {self.unit}\")\n        return response",
+   "new": "        return response",
+   "caught": true,
+   "killers": [
+    {
+     "id": "tests/test_client_noise.py::test_answer_from_another_device_is_rejected",
+     "name": "test_answer_from_another_device_is_rejected",
+     "title": "A perfectly valid answer that comes from another address is rejected.",
+     "suite": "test_client_noise"
+    }
+   ],
+   "killer_count": 1,
+   "seconds": 33.0
+  }
+ ]
+}

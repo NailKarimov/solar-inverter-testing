@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en" data-lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Solar inverter under test</title>
+    <meta
+      name="description"
+      content="A simulated solar inverter and the tests that prove it behaves: a tour, a live model, the bytes on the wire, the last test run and the planted bugs."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Unbounded:wght@500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+    />
+    <!-- include: css/site.css -->
+  </head>
+  <body>
+    <div class="wrap top">
+      <div>
+        <h1>
+          <span class="en">Solar inverter under test</span><span class="ru">Солнечный инвертор под проверкой</span>
+        </h1>
+        <div class="sub">
+          <span class="en">A simulated 5 kW inverter and the tests that prove it behaves</span>
+          <span class="ru">Модель инвертора на 5 кВт и тесты, которые доказывают, что она ведёт себя правильно</span>
+        </div>
+      </div>
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" id="lang-en" aria-pressed="true">EN</button>
+        <button type="button" id="lang-ru" aria-pressed="false">RU</button>
+      </div>
+    </div>
+
+    <div class="tabsbar">
+      <nav class="wrap tabs" aria-label="Views">
+        <a href="#tour" data-view="tour"><span class="n">1</span><span class="en">In two minutes</span><span class="ru">За две минуты</span></a>
+        <a href="#live" data-view="live"><span class="n">2</span><span class="en">Live inverter</span><span class="ru">Живой инвертор</span></a>
+        <a href="#wire" data-view="wire"><span class="n">3</span><span class="en">On the wire</span><span class="ru">Что идёт по проводу</span></a>
+        <a href="#replay" data-view="replay"><span class="n">4</span><span class="en">Last test run</span><span class="ru">Последний прогон</span></a>
+        <a href="#bugs" data-view="bugs"><span class="n">5</span><span class="en">Bug hunt</span><span class="ru">Охота на баги</span></a>
+      </nav>
+    </div>
+
+    <main class="wrap">
+      <!-- include: views/tour.html -->
+      <!-- include: views/live.html -->
+      <!-- include: views/wire.html -->
+      <!-- include: views/replay.html -->
+      <!-- include: views/bugs.html -->
+    </main>
+
+    <footer class="wrap foot">
+      <span>
+        <span class="en">Part of the QA portfolio of</span><span class="ru">Часть QA-портфолио:</span>
+        <a href="https://github.com/NailKarimov">Nail Karimov</a>
+      </span>
+      <a href="https://github.com/NailKarimov/solar-inverter-testing"
+        ><span class="en">Source code and tests</span><span class="ru">Исходный код и тесты</span></a
+      >
+      <a href="https://nailkarimov.github.io/solar-inverter-testing/index.html"
+        ><span class="en">Allure report</span><span class="ru">Отчёт Allure</span></a
+      >
+      <span id="foot-run"></span>
+    </footer>
+
+    <!-- include: data/map.js -->
+    <!-- include: data/run.js -->
+    <!-- include: data/mutants.js -->
+    <!-- include: data/ru.js -->
+    <!-- include: js/twin.js -->
+    <!-- include: js/core.js -->
+    <!-- include: js/scene.js -->
+    <!-- include: js/tour.js -->
+    <!-- include: js/live.js -->
+    <!-- include: js/wire.js -->
+    <!-- include: js/replay.js -->
+    <!-- include: js/bugs.js -->
+    <!-- include: js/app.js -->
+  </body>
+</html>

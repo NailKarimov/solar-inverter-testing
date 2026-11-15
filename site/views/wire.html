@@ -1,0 +1,69 @@
+<section class="view" id="view-wire">
+  <header>
+    <h2><span class="en">What goes down the wire</span><span class="ru">Что идёт по проводу</span></h2>
+    <p class="lead">
+      <span class="en">Every question to the inverter is a handful of bytes, and so is every answer. Here they are, taken apart.</span>
+      <span class="ru">Каждый вопрос инвертору — это горстка байт, и каждый ответ тоже. Здесь они разобраны на части.</span>
+    </p>
+  </header>
+
+  <section>
+    <h3><span class="en">1. Pick a question</span><span class="ru">1. Выберите вопрос</span></h3>
+    <div class="ask" id="wire-ask"></div>
+    <div class="row">
+      <span class="small muted"><span class="en">Cable:</span><span class="ru">Кабель:</span></span>
+      <button type="button" class="chip" id="wire-rtu" aria-pressed="true">
+        <span class="en">serial (RS-485)</span><span class="ru">последовательный (RS-485)</span>
+      </button>
+      <button type="button" class="chip" id="wire-tcp" aria-pressed="false">
+        <span class="en">network (TCP)</span><span class="ru">сеть (TCP)</span>
+      </button>
+    </div>
+    <div class="card talk" id="wire-talk"></div>
+    <p class="small muted" id="wire-cable"></p>
+  </section>
+
+  <section>
+    <h3><span class="en">2. Noise on the line</span><span class="ru">2. Помеха на линии</span></h3>
+    <p>
+      <span class="en"
+        >A long cable next to motors and power lines picks up noise. One flipped bit turns "read register 40084" into
+        something else. The last two bytes of every serial message are a checksum: a number calculated from all the
+        bytes before it. The receiver calculates it again and compares.</span
+      >
+      <span class="ru"
+        >Длинный кабель рядом с моторами и силовыми линиями собирает помехи. Один перевёрнутый бит превращает «прочитать
+        регистр 40084» во что-то другое. Последние два байта каждого сообщения в последовательной линии — контрольная
+        сумма: число, вычисленное из всех байт перед ним. Получатель вычисляет её заново и сравнивает.</span
+      >
+    </p>
+    <div class="row">
+      <button type="button" class="btn danger" id="wire-noise">
+        <span class="en">Flip one bit on the way</span><span class="ru">Перевернуть один бит по дороге</span>
+      </button>
+      <button type="button" class="btn" id="wire-clean">
+        <span class="en">Send it undamaged</span><span class="ru">Отправить без повреждений</span>
+      </button>
+    </div>
+    <div class="card" id="wire-noisebox" style="display: grid; gap: 12px"></div>
+  </section>
+
+  <section>
+    <h3><span class="en">3. The map: what can be asked</span><span class="ru">3. Карта: о чём можно спросить</span></h3>
+    <p>
+      <span class="en"
+        >The inverter keeps its numbers in 176 numbered cells called registers, starting at 40000. The SunSpec standard
+        says which cell holds what, so a program that has never met this inverter can still read it. The first two
+        cells spell "SunS". After them come four blocks, each starting with its number and its length.</span
+      >
+      <span class="ru"
+        >Инвертор хранит свои числа в 176 пронумерованных ячейках, регистрах, начиная с 40000. Стандарт SunSpec
+        определяет, что лежит в какой ячейке, поэтому программа, которая никогда не видела этот инвертор, всё равно
+        может его прочитать. Первые две ячейки складываются в «SunS». За ними идут четыре блока, каждый начинается со
+        своего номера и своей длины.</span
+      >
+    </p>
+    <div class="scroll"><div class="mapbar" id="wire-mapbar"></div></div>
+    <div class="card scroll" id="wire-points"></div>
+  </section>
+</section>

@@ -1,0 +1,136 @@
+<section class="view" id="view-live">
+  <header>
+    <h2><span class="en">The live inverter</span><span class="ru">Живой инвертор</span></h2>
+    <p class="lead">
+      <span class="en"
+        >This is the model the tests run against, rewritten for the browser and compared with the original byte for
+        byte. Move the sun, send commands, cut the grid. Then plant a bug and watch a check turn red.</span
+      >
+      <span class="ru"
+        >Это та самая модель, на которой идут тесты, переписанная для браузера и сверенная с оригиналом байт в байт.
+        Двигайте солнце, отправляйте команды, отключайте сеть. Потом посадите баг и посмотрите, как проверка
+        краснеет.</span
+      >
+    </p>
+  </header>
+
+  <div class="live">
+    <div class="col">
+      <div class="scene" id="live-scene"></div>
+
+      <div class="card" style="display: grid; gap: 14px">
+        <div class="statebar">
+          <span class="led" id="live-led"></span>
+          <strong id="live-state"></strong>
+          <span class="pill" id="live-st"></span>
+          <span id="live-events" class="row"></span>
+        </div>
+        <div class="readout main">
+          <div class="k"><span class="en">Power delivered to the house and the grid</span><span class="ru">Мощность, отдаваемая в дом и сеть</span></div>
+          <div class="v" id="live-w"></div>
+        </div>
+        <div class="meter" aria-hidden="true"><i id="live-bar"></i><b id="live-mark"></b></div>
+        <div class="readouts">
+          <div class="readout">
+            <div class="k"><span class="en">Grid voltage</span><span class="ru">Напряжение сети</span></div>
+            <div class="v" id="live-v"></div>
+          </div>
+          <div class="readout">
+            <div class="k"><span class="en">Current</span><span class="ru">Ток</span></div>
+            <div class="v" id="live-a"></div>
+          </div>
+          <div class="readout">
+            <div class="k"><span class="en">From the panels</span><span class="ru">От панелей</span></div>
+            <div class="v" id="live-dc"></div>
+          </div>
+          <div class="readout">
+            <div class="k"><span class="en">Heat sink</span><span class="ru">Радиатор</span></div>
+            <div class="v" id="live-t"></div>
+          </div>
+          <div class="readout">
+            <div class="k"><span class="en">Energy since reset</span><span class="ru">Энергия после сброса</span></div>
+            <div class="v" id="live-e"></div>
+          </div>
+        </div>
+        <p class="small muted">
+          <span class="en">Every number here was read from the inverter's registers over Modbus, four times a second.</span>
+          <span class="ru">Каждое число здесь прочитано из регистров инвертора по Modbus, четыре раза в секунду.</span>
+        </p>
+      </div>
+
+      <div class="card wirebox">
+        <h3><span class="en">On the wire right now</span><span class="ru">Сейчас в проводе</span></h3>
+        <div id="live-wire"></div>
+      </div>
+      <div class="card" style="display: grid; gap: 8px">
+        <h3><span class="en">Plant a bug</span><span class="ru">Посадить баг</span></h3>
+        <p class="small muted">
+          <span class="en">Each switch changes one line of the inverter's code, the same change as in the bug hunt. The page then creates the situation where the bug shows.</span>
+          <span class="ru">Каждый переключатель меняет одну строку кода инвертора, ту же, что и в охоте на баги. После этого страница сама создаёт ситуацию, в которой баг проявляется.</span>
+        </p>
+        <div class="bugs" id="live-bugs"></div>
+        <p class="note" id="live-note" hidden></p>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card controls">
+        <h3><span class="en">Time and weather</span><span class="ru">Время и погода</span></h3>
+        <div class="ctl">
+          <label for="live-time"
+            ><span><span class="en">Time of day</span><span class="ru">Время суток</span></span><b id="live-time-v"></b></label
+          >
+          <input type="range" id="live-time" min="0" max="1439" step="1" />
+        </div>
+        <div class="ctl">
+          <div class="lab">
+            <span><span class="en">How fast time runs</span><span class="ru">Как быстро идёт время</span></span>
+          </div>
+          <div class="row" id="live-speed"></div>
+        </div>
+        <div class="ctl">
+          <label for="live-cloud"
+            ><span><span class="en">Clouds</span><span class="ru">Облака</span></span><b id="live-cloud-v"></b></label
+          >
+          <input type="range" id="live-cloud" min="0" max="100" step="5" />
+        </div>
+
+        <h3><span class="en">Commands and accidents</span><span class="ru">Команды и происшествия</span></h3>
+        <div class="ctl">
+          <label for="live-limit"
+            ><span><span class="en">Power limit from the grid operator</span><span class="ru">Ограничение мощности от оператора сети</span></span
+            ><b id="live-limit-v"></b></label
+          >
+          <input type="range" id="live-limit" min="0" max="100" step="5" value="50" />
+        </div>
+        <div class="row">
+          <button type="button" class="btn" id="live-limit-on" aria-pressed="false">
+            <span class="en">Limit power</span><span class="ru">Ограничить мощность</span>
+          </button>
+          <button type="button" class="btn" id="live-conn" aria-pressed="false">
+            <span class="en">Disconnect (command)</span><span class="ru">Отключить (команда)</span>
+          </button>
+        </div>
+        <div class="row">
+          <button type="button" class="btn danger" id="live-grid" aria-pressed="false">
+            <span class="en">Grid outage</span><span class="ru">Авария в сети</span>
+          </button>
+          <button type="button" class="btn danger" id="live-heat" aria-pressed="false">
+            <span class="en">Heat to 95 °C</span><span class="ru">Нагреть до 95 °C</span>
+          </button>
+          <button type="button" class="btn" id="live-reset"><span class="en">Reset</span><span class="ru">Сброс</span></button>
+        </div>
+      </div>
+
+      <div class="card" style="display: grid; gap: 8px">
+        <h3><span class="en">Checks that run all the time</span><span class="ru">Проверки, которые идут постоянно</span></h3>
+        <p class="small muted">
+          <span class="en">Short versions of the real tests. They look at the inverter after every simulated second. A grey circle means the situation has not come up yet.</span>
+          <span class="ru">Короткие версии настоящих тестов. Они смотрят на инвертор после каждой модельной секунды. Серый кружок значит, что такая ситуация ещё не возникала.</span>
+        </p>
+        <div class="checks" id="live-checks"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
